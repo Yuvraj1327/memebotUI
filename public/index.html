@@ -159,7 +159,6 @@ button{font-family:inherit}
   transition:border-color .18s var(--ease), background .18s var(--ease), color .18s var(--ease);
 }
 .chip .cdot{width:5.5px;height:5.5px;border-radius:50%;background:var(--text3);flex-shrink:0}
-/* ok / warn / danger state modifiers */
 .chip.ok{color:var(--green);border-color:rgba(20,241,149,.28);background:var(--green-dim)}
 .chip.ok .cdot{background:var(--green);box-shadow:0 0 5px var(--green);animation:blink 1.8s infinite}
 .chip.warn{color:var(--warning);border-color:rgba(255,193,7,.28);background:var(--warning-dim)}
@@ -168,7 +167,6 @@ button{font-family:inherit}
 .chip.danger .cdot{background:var(--danger)}
 .chip.accent{color:var(--purple);border-color:rgba(153,69,255,.3);background:var(--purple-dim)}
 
-/* net / mode legacy aliases still used by JS */
 .net-badge{
   display:inline-flex;align-items:center;gap:5px;
   padding:5px 10px;border-radius:7px;
@@ -177,15 +175,19 @@ button{font-family:inherit}
 }
 .net-dot{width:5.5px;height:5.5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:blink 2s infinite;flex-shrink:0}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.mode-pill{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 10px;border-radius:7px;
-  background:var(--purple-dim);border:1px solid rgba(153,69,255,.3);
-  font-size:10.5px;color:var(--purple);font-family:'JetBrains Mono',monospace;font-weight:600;
-  white-space:nowrap;transition:all .2s var(--ease);
-}
 
-/* pill → now uses .chip internally; keep .pill for JS-set class compat */
+/* Large, prominent mode badge (task 8) */
+.mode-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 16px;border-radius:10px;
+  background:var(--purple-dim);border:1.5px solid rgba(153,69,255,.35);
+  font-size:13px;color:var(--purple);font-family:'JetBrains Mono',monospace;font-weight:700;
+  white-space:nowrap;transition:all .2s var(--ease);
+  box-shadow:0 0 0 rgba(153,69,255,0);
+}
+.mode-pill.live-mode{box-shadow:0 0 18px rgba(20,241,149,.15)}
+.mode-pill.paper-mode{box-shadow:0 0 18px rgba(153,69,255,.12)}
+
 .pill{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;font-size:10.5px;font-weight:600;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-family:'JetBrains Mono',monospace;white-space:nowrap;flex-shrink:0}
 .pill .dot{width:5.5px;height:5.5px;border-radius:50%;background:var(--text3);flex-shrink:0}
 .pill.ok .dot{background:var(--green);box-shadow:0 0 5px var(--green);animation:blink 1.8s infinite}
@@ -205,14 +207,12 @@ button{font-family:inherit}
   flex-wrap:nowrap;
 }
 
-/* conn badge */
 .conn-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;font-size:11.5px;font-weight:600;border:1px solid var(--border2);background:var(--bg3);transition:all .2s var(--ease);white-space:nowrap}
 .conn-badge.live{border-color:rgba(20,241,149,.4);background:var(--green-dim);color:var(--green)}
 .conn-badge.dead{border-color:rgba(255,82,82,.4);background:var(--danger-dim);color:var(--danger)}
 .conn-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
 .conn-dot.live{animation:blink 1.5s infinite}
 
-/* icon buttons */
 .icon-btn{
   position:relative;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);
   background:var(--bg3);color:var(--text2);display:flex;align-items:center;justify-content:center;
@@ -221,26 +221,18 @@ button{font-family:inherit}
 .icon-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--border2);transform:translateY(-1px)}
 .icon-btn .badge-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--danger);border:1.5px solid var(--bg2)}
 
-/* action buttons */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:11.5px;font-weight:600;cursor:pointer;transition:all .15s var(--ease);white-space:nowrap;flex-shrink:0}
 .btn:hover{background:var(--bg4);color:var(--text);transform:translateY(-1px)}
-.btn-pause{border-color:rgba(153,69,255,.4);background:var(--purple-dim);color:var(--purple)}
-.btn-pause:hover{background:rgba(153,69,255,.22)}
-.btn-pause.paused{border-color:rgba(255,82,82,.4);background:var(--danger-dim);color:var(--danger)}
 .btn-pause:disabled{opacity:.45;cursor:not-allowed;transform:none;pointer-events:none}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;pointer-events:none}
 
-/* engine control buttons */
 .engine-controls{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .btn-start{border-color:rgba(20,241,149,.4);background:var(--green-dim);color:var(--green)}
 .btn-start:hover{background:rgba(20,241,149,.22)}
-.btn-pause2{border-color:rgba(255,193,7,.4);background:var(--warning-dim);color:var(--warning)}
-.btn-pause2:hover{background:rgba(255,193,7,.22)}
 .btn-stop{border-color:rgba(255,82,82,.4);background:var(--danger-dim);color:var(--danger)}
 .btn-stop:hover{background:rgba(255,82,82,.22)}
 .btn-emergency{border-color:rgba(255,82,82,.7);background:var(--danger);color:#fff;font-weight:700}
 .btn-emergency:hover{filter:brightness(1.12)}
-.engine-pill{font-weight:700;flex-shrink:0}
 
 .notif-wrap{position:relative}
 .notif-drop{
@@ -321,7 +313,6 @@ button{font-family:inherit}
 .sb-stopping{background:var(--warning-dim);color:var(--warning);border:1px solid rgba(255,193,7,.3)}
 .sb-stopping .sdot{background:var(--warning);animation:blink 0.9s infinite}
 
-/* legacy paper/live pause toggle is superseded by the state-aware engine controls */
 #pause-btn{display:none}
 
 .tok-table-head{display:grid;grid-template-columns:1.9fr .9fr .6fr .9fr .9fr .8fr 1fr;gap:8px;padding:9px 16px;font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.012)}
@@ -366,7 +357,7 @@ button{font-family:inherit}
 .pos-ring .fill{stroke-linecap:round;transition:stroke-dashoffset .4s linear, stroke .3s}
 .pos-ring .label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700}
 .pos-info{flex:1;min-width:0}
-.pos-addr{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pos-addr{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px}
 .pos-sub{font-size:10px;color:var(--text3);margin-top:3px;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:6px}
 .pos-timer{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0}
 .pos-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding-left:50px}
@@ -375,6 +366,9 @@ button{font-family:inherit}
 .pos-stat-val{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pos-stat-val.up{color:var(--green)}
 .pos-stat-val.dn{color:var(--danger)}
+.pos-mode-badge{font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.pos-mode-badge.paper{background:var(--purple-dim);color:var(--purple)}
+.pos-mode-badge.live{background:var(--green-dim);color:var(--green)}
 
 .prog-wrap{padding:13px 16px;border-top:1px solid var(--border);background:rgba(255,255,255,.008)}
 .prog-top{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:8px}
@@ -470,6 +464,7 @@ select.cfg-in{color:var(--text);cursor:pointer}
 .save-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .save-btn.ok{background:var(--success);color:#04120c}
 .save-btn.fail{background:var(--danger);color:#2a0505}
+.save-btn:disabled{opacity:.6;cursor:wait;transform:none}
 .ghost-btn{padding:11px 14px;background:transparent;border:1px solid var(--border2);color:var(--text2);border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
 .ghost-btn:hover{background:var(--bg4);color:var(--text)}
 .danger-link{color:var(--danger);font-size:11.5px;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
@@ -478,9 +473,8 @@ select.cfg-in{color:var(--text);cursor:pointer}
 .ql{padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--bg4);color:var(--text3);font-size:10px;text-align:center;text-decoration:none;font-family:'JetBrains Mono',monospace;transition:all .15s;display:block}
 .ql:hover{color:var(--cyan);border-color:rgba(6,182,212,.4);background:rgba(6,182,212,.1)}
 
-/* --- new: history table (reuses tok-table-head grid pattern) --- */
-.hist-table-head{display:grid;grid-template-columns:.85fr 1fr .8fr .8fr .8fr .8fr .7fr 1fr .8fr;gap:8px;padding:9px 16px;font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.012)}
-.hist-item{display:grid;grid-template-columns:.85fr 1fr .8fr .8fr .8fr .8fr .7fr 1fr .8fr;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);transition:background .12s}
+.hist-table-head{display:grid;grid-template-columns:.85fr 1fr .8fr .8fr .8fr .8fr .6fr .7fr 1fr .8fr;gap:8px;padding:9px 16px;font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.012)}
+.hist-item{display:grid;grid-template-columns:.85fr 1fr .8fr .8fr .8fr .8fr .6fr .7fr 1fr .8fr;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);transition:background .12s}
 .hist-item:hover{background:rgba(255,255,255,.025)}
 .hist-item:last-child{border-bottom:none}
 .hist-cell{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -492,7 +486,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
 .hist-status.fail{background:var(--danger-dim);color:var(--danger)}
 .hist-status.pending{background:var(--warning-dim);color:var(--warning)}
 
-/* NEW: History filter bar (search + mode/status filters + export) */
 .hist-filters{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.008);flex-wrap:wrap}
 .hist-search{flex:1;min-width:120px;background:var(--bg4);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;outline:none;transition:all .15s}
 .hist-search:focus{border-color:rgba(20,241,149,.5);box-shadow:0 0 0 3px var(--green-dim)}
@@ -500,7 +493,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
 .hist-export{padding:7px 12px;border-radius:8px;border:1px solid rgba(20,241,149,.35);background:var(--green-dim);color:var(--green);font-size:11px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s;white-space:nowrap}
 .hist-export:hover{background:rgba(20,241,149,.22)}
 
-/* NEW: Live Terminal category tags */
 .term-cat{padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.3px;flex-shrink:0}
 .term-cat.Scanner{background:rgba(153,69,255,.16);color:var(--purple)}
 .term-cat.Wallet{background:rgba(20,241,149,.16);color:var(--green)}
@@ -509,18 +501,11 @@ select.cfg-in{color:var(--text);cursor:pointer}
 .term-cat.RPC{background:rgba(255,193,7,.16);color:var(--warning)}
 .term-cat.WebSocket{background:rgba(59,130,246,.16);color:var(--blue)}
 
-/* ================================================================
-   RESPONSIVE BREAKPOINTS
-   ================================================================ */
-
-/* ── 1440px+ (large desktop): full 3-col layout, nothing hidden ── */
 @media(min-width:1440px){
   .topbar{padding:0 32px;}
   .topbar-center{gap:7px;padding:6px 20px}
   .topbar-right{gap:7px;padding-left:20px}
 }
-
-/* ── 1150–1439px (laptop): chips wrap naturally, controls stay in line ── */
 @media(max-width:1439px) and (min-width:1024px){
   .topbar{grid-template-columns:auto 1fr auto;padding:0 18px;min-height:clamp(64px,5vw,72px)}
   .topbar-center{gap:5px;padding:5px 12px}
@@ -528,95 +513,43 @@ select.cfg-in{color:var(--text);cursor:pointer}
   .btn{font-size:11px;padding:6px 11px}
   .chip,.pill,.net-badge,.mode-pill{font-size:10px;padding:4px 9px}
 }
-
-/* ── 1024–1023px (small laptop) ── */
 @media(max-width:1150px){
   .layout{grid-template-columns:1fr}
   .stats{grid-template-columns:repeat(4,1fr)}
 }
-
-/* ── 900px: hide button text labels, shrink buttons to icon+text short form ── */
 @media(max-width:900px){
   .engine-controls .btn-label{display:none}
   .engine-controls .btn{padding:7px 9px}
-  #engine-pill{display:none}
 }
-
-/* ── 768–1023px (tablet): two-row navbar ── */
 @media(max-width:1023px) and (min-width:768px){
   .topbar{
     grid-template-columns:1fr 1fr;
-    grid-template-areas:
-      'logo actions'
-      'chips chips';
-    min-height:auto;
-    padding:10px 16px 8px;
-    gap:0;
-    row-gap:8px;
+    grid-template-areas:'logo actions' 'chips chips';
+    min-height:auto;padding:10px 16px 8px;gap:0;row-gap:8px;
   }
-  .logo{
-    border-right:none;
-    padding-right:0;
-    height:auto;
-  }
-  .topbar-center{
-    grid-area:chips;
-    padding:0;
-    border-top:1px solid var(--border);
-    padding-top:8px;
-    gap:6px;
-    flex-wrap:wrap;
-  }
-  .topbar-right{
-    border-left:none;
-    padding-left:0;
-    justify-content:flex-end;
-    flex-wrap:wrap;
-    gap:5px;
-  }
-  .conn-badge{font-size:11px}
+  .logo{border-right:none;padding-right:0;height:auto}
+  .topbar-center{grid-area:chips;padding:0;border-top:1px solid var(--border);padding-top:8px;gap:6px;flex-wrap:wrap}
+  .topbar-right{border-left:none;padding-left:0;justify-content:flex-end;flex-wrap:wrap;gap:5px}
   .btn{font-size:11px;padding:6px 10px}
   .engine-controls .btn-label{display:none}
   .engine-controls .btn{padding:6px 9px}
 }
-
-/* ── <768px (mobile): full stack ── */
 @media(max-width:767px){
   .topbar{
     grid-template-columns:1fr auto;
-    grid-template-areas:
-      'logo actions'
-      'chips chips';
-    min-height:auto;
-    padding:10px 14px 8px;
-    gap:0;
-    row-gap:8px;
+    grid-template-areas:'logo actions' 'chips chips';
+    min-height:auto;padding:10px 14px 8px;gap:0;row-gap:8px;
   }
   .logo{border-right:none;padding-right:0;height:auto}
   .logo-tag{display:none}
   .logo-name{font-size:clamp(13px,4vw,15px)}
   .logo-mark{width:34px;height:34px}
-  .topbar-center{
-    grid-area:chips;
-    padding:0;padding-top:8px;
-    border-top:1px solid var(--border);
-    flex-wrap:wrap;gap:5px;
-  }
-  .topbar-right{
-    border-left:none;padding-left:0;
-    justify-content:flex-end;
-    flex-wrap:wrap;gap:5px;
-    align-items:center;
-  }
-  /* hide latency + engine pill on mobile to save space */
-  #latency-pill,#engine-pill{display:none}
-  .conn-badge{font-size:11px;padding:5px 9px}
-  #conn-text{display:none}
+  .topbar-center{grid-area:chips;padding:0;padding-top:8px;border-top:1px solid var(--border);flex-wrap:wrap;gap:5px}
+  .topbar-right{border-left:none;padding-left:0;justify-content:flex-end;flex-wrap:wrap;gap:5px;align-items:center}
   .btn{font-size:11px;padding:6px 10px}
   .engine-controls .btn-label{display:none}
   .engine-controls .btn{padding:6px 9px}
   .icon-btn{width:34px;height:34px;font-size:13px}
-  /* status chips: allow full-width wrap on very small screens */
   .net-badge,.mode-pill,.pill,.chip{font-size:10px;padding:4px 8px}
   .main{padding:12px 12px 28px;gap:12px}
   .stats{grid-template-columns:repeat(2,1fr);gap:10px}
@@ -639,8 +572,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
   .hist-filters{padding:9px 14px}
   .hist-search{min-width:100%}
 }
-
-/* ── <480px (small phone) ── */
 @media(max-width:480px){
   .stats{grid-template-columns:repeat(2,1fr)}
   .drawer{width:100vw;max-width:100vw}
@@ -650,7 +581,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
   .dgroup{padding:14px 14px 6px}
   .drawer-foot{padding:12px 14px}
   .qlinks{padding:0 14px 14px}
-  /* emergency sell becomes full-width below logo row on tiny phones */
   .topbar-right{width:100%;justify-content:flex-end}
   .wallet-btn{padding:5px 9px 5px 5px;font-size:11px}
   #wallet-btn-text{display:none}
@@ -665,6 +595,8 @@ select.cfg-in{color:var(--text);cursor:pointer}
 .wallet-btn.connected:hover{background:rgba(20,241,149,.2)}
 .wallet-btn-avatar{width:22px;height:22px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;font-size:12px}
 .wallet-btn-avatar img{width:100%;height:100%;object-fit:contain}
+.wallet-btn-balance{font-size:10px;color:var(--text3);font-weight:500;padding-left:6px;border-left:1px solid var(--border2);margin-left:2px}
+.wallet-btn.connected .wallet-btn-balance{color:var(--green);border-color:rgba(20,241,149,.25)}
 
 .wallet-modal-overlay{position:fixed;inset:0;background:rgba(3,5,8,.65);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .2s var(--ease),visibility .2s var(--ease);z-index:500;display:flex;align-items:center;justify-content:center}
 .wallet-modal-overlay.open{opacity:1;visibility:visible}
@@ -703,7 +635,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
 .wc-connect-cta{margin:12px 16px;padding:10px;border-radius:9px;border:1px dashed var(--border2);background:transparent;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;width:calc(100% - 32px);transition:all .15s}
 .wc-connect-cta:hover{border-color:rgba(20,241,149,.5);color:var(--green);background:var(--green-dim)}
 
-/* Lightweight tooltips (title-less, CSS-only, for fields/labels that need one) */
 [data-tip]{position:relative}
 [data-tip]:hover::after{
   content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:0;
@@ -712,17 +643,119 @@ select.cfg-in{color:var(--text);cursor:pointer}
   border:1px solid var(--border2);line-height:1.4;
 }
 
-/* Small interaction polish: press feedback + smoother card focus */
 .btn:active,.icon-btn:active,.wallet-opt:active,.wallet-btn:active,.wc-disconnect:active,.wc-connect-cta:active{transform:scale(.96)}
 .save-btn:active{transform:scale(.98)}
 .mode-btn:active{transform:scale(.97)}
+
+.live-warning-banner{
+  display:none;align-items:center;gap:10px;padding:9px 24px;
+  background:var(--danger-dim);border-bottom:1px solid rgba(255,82,82,.28);
+  font-size:11.5px;font-weight:600;color:var(--danger);font-family:'JetBrains Mono',monospace;flex-wrap:wrap;
+}
+.live-warning-banner.show{display:flex}
+.live-warning-banner.positive{background:var(--green-dim);border-bottom-color:rgba(20,241,149,.28);color:var(--green)}
+.live-warning-banner .warn-icon{font-size:14px;flex-shrink:0}
+.live-warning-banner .warn-close{margin-left:auto;cursor:pointer;opacity:.6;font-size:13px;padding:2px 7px;border-radius:5px;border:1px solid rgba(255,82,82,.25);transition:opacity .15s}
+.live-warning-banner .warn-close:hover{opacity:1;background:rgba(255,82,82,.12)}
+.live-warning-banner.positive .warn-close{border-color:rgba(20,241,149,.25)}
+.live-warning-banner.positive .warn-close:hover{background:rgba(20,241,149,.12)}
+
+.mode-pill.paper-mode{color:var(--purple);border-color:rgba(153,69,255,.35);background:var(--purple-dim)}
+.mode-pill.live-mode{color:var(--green);border-color:rgba(20,241,149,.35);background:var(--green-dim)}
+
+#start-btn[data-live-disabled]{opacity:.38 !important;cursor:not-allowed !important;transform:none !important}
+
+.wallet-req-notice{
+  display:none;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;
+  background:var(--warning-dim);border:1px solid rgba(255,193,7,.25);
+  font-size:10px;font-weight:600;color:var(--warning);font-family:'JetBrains Mono',monospace;white-space:nowrap;flex-shrink:0;
+}
+.wallet-req-notice.show{display:flex}
+.wallet-req-notice.ready{background:var(--green-dim);border-color:rgba(20,241,149,.25);color:var(--green)}
+
+.wc-net-badge{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:6px;
+  font-size:9.5px;font-weight:700;font-family:'JetBrains Mono',monospace;
+  background:var(--green-dim);color:var(--green);border:1px solid rgba(20,241,149,.25);flex-shrink:0;
+}
+.wc-balance-zero{color:var(--danger) !important}
+.wc-balance-low{color:var(--warning) !important}
+
+/* ================================================================
+   TOAST NOTIFICATIONS (task 12)
+   ================================================================ */
+.toast-stack{
+  position:fixed;top:76px;right:20px;z-index:900;
+  display:flex;flex-direction:column;gap:8px;
+  width:320px;max-width:calc(100vw - 32px);
+  pointer-events:none;
+}
+.toast{
+  pointer-events:auto;
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 14px;border-radius:11px;
+  background:var(--bg2);border:1px solid var(--border);
+  box-shadow:var(--shadow-pop);
+  font-size:12px;color:var(--text2);
+  opacity:0;transform:translateX(24px);
+  animation:toastIn .3s var(--ease) forwards;
+}
+.toast.leaving{animation:toastOut .25s var(--ease) forwards}
+@keyframes toastIn{to{opacity:1;transform:translateX(0)}}
+@keyframes toastOut{to{opacity:0;transform:translateX(24px) scale(.96)}}
+.toast-icon{font-size:16px;flex-shrink:0;line-height:1.3}
+.toast-body{flex:1;min-width:0}
+.toast-title{font-weight:700;color:var(--text);font-size:12.5px}
+.toast-msg{color:var(--text2);margin-top:2px;line-height:1.4}
+.toast-close{cursor:pointer;color:var(--text3);font-size:12px;flex-shrink:0;padding:2px}
+.toast-close:hover{color:var(--text)}
+.toast.success{border-color:rgba(20,241,149,.35)}
+.toast.success .toast-icon{color:var(--green)}
+.toast.error{border-color:rgba(255,82,82,.35)}
+.toast.error .toast-icon{color:var(--danger)}
+.toast.warning{border-color:rgba(255,193,7,.35)}
+.toast.warning .toast-icon{color:var(--warning)}
+.toast.info{border-color:rgba(59,130,246,.35)}
+.toast.info .toast-icon{color:var(--blue)}
+
+@media(max-width:480px){
+  .toast-stack{top:auto;bottom:16px;right:12px;left:12px;width:auto}
+}
+
+/* ================================================================
+   EMERGENCY SELL CONFIRMATION MODAL (two-step, per spec wording)
+   ================================================================ */
+.confirm-modal-overlay{position:fixed;inset:0;background:rgba(3,5,8,.7);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .2s var(--ease),visibility .2s var(--ease);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px}
+.confirm-modal-overlay.open{opacity:1;visibility:visible}
+.confirm-modal{width:400px;max-width:100%;background:var(--bg2);border:1px solid rgba(255,82,82,.35);border-radius:16px;box-shadow:var(--shadow-pop);transform:translateY(12px) scale(.97);transition:transform .25s var(--ease);overflow:hidden}
+.confirm-modal-overlay.open .confirm-modal{transform:translateY(0) scale(1)}
+.confirm-modal-head{padding:20px 22px 8px;display:flex;align-items:center;gap:10px}
+.confirm-modal-head .cm-icon{font-size:22px}
+.confirm-modal-head .cm-title{font-size:15px;font-weight:700;color:var(--danger)}
+.confirm-modal-body{padding:6px 22px 18px;font-size:12.5px;color:var(--text2);line-height:1.6}
+.confirm-modal-body b{color:var(--text)}
+.confirm-modal-foot{display:flex;gap:8px;padding:16px 22px;border-top:1px solid var(--border)}
+.confirm-cancel{flex:1;padding:11px;border-radius:9px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s}
+.confirm-cancel:hover{background:var(--bg4);color:var(--text)}
+.confirm-danger{flex:1;padding:11px;border-radius:9px;border:none;background:var(--danger);color:#fff;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s}
+.confirm-danger:hover{filter:brightness(1.12)}
+.confirm-danger:disabled{opacity:.6;cursor:wait}
+
+/* ================================================================
+   "Ready for Live Trading" positive chip
+   ================================================================ */
+.ready-chip{
+  display:none;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;
+  background:var(--green-dim);border:1px solid rgba(20,241,149,.3);
+  font-size:10px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;white-space:nowrap;flex-shrink:0;
+}
+.ready-chip.show{display:flex}
 </style>
 </head>
 <body>
 
 <div class="topbar">
 
-  <!-- ── LEFT: Logo ── -->
   <div class="logo">
     <div class="logo-mark"><img src="/Deshboard/public/logo/memebot-logo.png" alt="MemeRush logo"></div>
     <div class="logo-text">
@@ -731,57 +764,37 @@ select.cfg-in{color:var(--text);cursor:pointer}
     </div>
   </div>
 
-  <!-- ── CENTER: Status chips ── -->
   <div class="topbar-center">
-    <!-- Network -->
-    <div class="net-badge"><span class="net-dot"></span>Solana Mainnet</div>
-    <!-- Paper/Live Mode -->
-    <div class="mode-pill" id="mode-pill">📄 Paper</div>
-    <!-- Backend WS -->
-    <div class="conn-badge dead" id="conn-badge">
-      <div class="conn-dot" id="conn-dot"></div>
-      <span id="conn-text">Connecting</span>
-    </div>
-    <!-- Backend pill -->
-    <div class="pill ok" id="wallet-pill" data-tip="Reflects the live connection between this dashboard and the backend bot"><span class="dot"></span><span id="wallet-pill-text">Backend</span></div>
-    <!-- RPC pill -->
-    <div class="pill ok" id="rpc-pill"><span class="dot"></span><span id="rpc-pill-text">RPC</span></div>
-    <!-- Live / Bot Status -->
-    <span class="pill engine-pill" id="engine-pill">🔴 Stopped</span>
-    <!-- Latency -->
-    <div class="pill" id="latency-pill"><span class="dot" id="latency-dot"></span><span id="latency-text">— ms</span></div>
+    <!-- Large, prominent Paper/Live mode badge (task 8) — the ONLY status indicator left in the navbar besides wallet -->
+    <div class="mode-pill paper-mode" id="mode-pill">🟣 Paper Trading</div>
+    <!-- "Ready for Live Trading" positive indicator (task 7) -->
+    <span class="ready-chip" id="ready-chip">✓ Ready for Live Trading</span>
   </div>
 
-  <!-- ── RIGHT: Wallet + Controls + Icons ── -->
   <div class="topbar-right">
 
-    <!-- Connect Wallet (auth-only) -->
     <button class="wallet-btn" id="wallet-btn" onclick="openWalletModal()"
       data-tip="Connect a wallet to authenticate dashboard controls. The bot's own trading wallet always stays on the backend.">
       <span class="wallet-btn-avatar" id="wallet-btn-avatar">👛</span>
       <span id="wallet-btn-text">Connect Wallet</span>
+      <span class="wallet-btn-balance" id="wallet-btn-balance" style="display:none"></span>
     </button>
 
-    <!-- Engine controls: Start / Pause / Stop / Emergency Sell -->
     <div class="engine-controls" id="engine-controls">
       <button class="btn btn-start" id="start-btn" onclick="startBot()" title="Start Bot">
-        <span id="start-icon">▶</span><span class="btn-label" id="start-label">Start</span>
+        <span id="start-icon">▶</span><span class="btn-label" id="start-label">Start Bot</span>
       </button>
-      <button class="btn btn-pause2" id="pause-btn2" onclick="pauseBot()" title="Pause Bot">
-        ⏸<span class="btn-label">Pause</span>
+      <button class="btn btn-stop" id="stop-btn" onclick="stopBot()" title="Stop Bot" style="display:none">
+        ⏹<span class="btn-label">Stop Bot</span>
       </button>
-      <button class="btn btn-stop" id="stop-btn" onclick="stopBot()" title="Stop Bot">
-        ⏹<span class="btn-label">Stop</span>
-      </button>
-      <button class="btn btn-emergency" id="emergency-btn" onclick="emergencySell()" title="Emergency Sell">
+      <button class="btn btn-emergency" id="emergency-btn" onclick="requestEmergencySell()" title="Emergency Sell" style="display:none">
         🚨<span class="btn-label">Emergency</span>
       </button>
     </div>
+    <span class="wallet-req-notice" id="wallet-req-notice">⚠ Connect wallet for Live Trading</span>
 
-    <!-- Legacy hidden toggle (kept for JS compat) -->
     <button class="btn btn-pause" id="pause-btn" onclick="toggleBot()" title="Legacy pause" style="display:none">⏸ Pause</button>
 
-    <!-- Notifications -->
     <div class="notif-wrap" id="notif-wrap">
       <button class="icon-btn" onclick="toggleNotif(event)" title="Notifications" id="notif-btn">
         🔔<span class="badge-dot" id="notif-dot" style="display:none"></span>
@@ -794,16 +807,21 @@ select.cfg-in{color:var(--text);cursor:pointer}
       </div>
     </div>
 
-    <!-- Settings -->
     <button class="icon-btn" onclick="openDrawer()" title="Settings" id="settings-btn">⚙️</button>
 
   </div>
 </div>
 
+<div class="live-warning-banner" id="live-warning-banner">
+  <span class="warn-icon">⚠️</span>
+  <span id="live-warning-text">Connect a Solana wallet to start Live Trading.</span>
+  <span class="warn-close" onclick="document.getElementById('live-warning-banner').classList.remove('show')" title="Dismiss">✕</span>
+</div>
+
 <div class="ticker">
   <div class="ticker-item"><span class="ticker-label">STATUS</span><span class="ticker-val pu" id="tk-status">STARTING</span></div>
   <div class="ticker-item"><span class="ticker-label">BALANCE</span><span class="ticker-val up" id="tk-bal">—</span></div>
-  <div class="ticker-item"><span class="ticker-label">TRADES</span><span class="ticker-val" id="tk-tr">0/100</span></div>
+  <div class="ticker-item"><span class="ticker-label">TRADES</span><span class="ticker-val" id="tk-tr">0</span></div>
   <div class="ticker-item"><span class="ticker-label">WIN RATE</span><span class="ticker-val" id="tk-wr">—</span></div>
   <div class="ticker-item"><span class="ticker-label">P&amp;L</span><span class="ticker-val" id="tk-pnl">+0.0%</span></div>
   <div class="ticker-item"><span class="ticker-label">UPTIME</span><span class="ticker-val" id="tk-up">—</span></div>
@@ -816,9 +834,9 @@ select.cfg-in{color:var(--text);cursor:pointer}
   <div class="stats">
     <div class="stat">
       <div class="stat-glow" style="background:linear-gradient(90deg,var(--green),transparent)"></div>
-      <div class="stat-top"><span class="stat-label">Wallet Balance</span><span class="stat-ico">◎</span></div>
+      <div class="stat-top"><span class="stat-label" id="s-bal-label">Paper Balance</span><span class="stat-ico">◎</span></div>
       <div class="stat-value" id="s-bal" style="color:var(--green)"><span class="skel"></span></div>
-      <div class="stat-sub">SOL available</div>
+      <div class="stat-sub" id="s-bal-sub">Virtual Funds</div>
     </div>
     <div class="stat">
       <div class="stat-glow" style="background:linear-gradient(90deg,var(--purple),transparent)"></div>
@@ -837,30 +855,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
       <div class="stat-top"><span class="stat-label">Win Rate</span><span class="stat-ico">🎯</span></div>
       <div class="stat-value" id="s-wr-val" style="color:var(--green)">—</div>
       <div class="stat-sub" id="s-wr">0W / 0L</div>
-    </div>
-    <div class="stat">
-      <div class="stat-glow" style="background:linear-gradient(90deg,var(--cyan),transparent)"></div>
-      <div class="stat-top"><span class="stat-label">Detection Speed</span><span class="stat-ico">📡</span></div>
-      <div class="stat-value" id="s-detspeed" style="color:var(--cyan)">—</div>
-      <div class="stat-sub">avg ms since mint</div>
-    </div>
-    <div class="stat">
-      <div class="stat-glow" style="background:linear-gradient(90deg,var(--green),transparent)"></div>
-      <div class="stat-top"><span class="stat-label">Avg Buy Time</span><span class="stat-ico">🟢</span></div>
-      <div class="stat-value" id="s-avgbuy" style="color:var(--text)">—</div>
-      <div class="stat-sub">detect → confirmed</div>
-    </div>
-    <div class="stat">
-      <div class="stat-glow" style="background:linear-gradient(90deg,var(--danger),transparent)"></div>
-      <div class="stat-top"><span class="stat-label">Avg Sell Time</span><span class="stat-ico">🔴</span></div>
-      <div class="stat-value" id="s-avgsell" style="color:var(--text)">—</div>
-      <div class="stat-sub">submit → confirmed</div>
-    </div>
-    <div class="stat">
-      <div class="stat-glow" style="background:linear-gradient(90deg,var(--warning),transparent)"></div>
-      <div class="stat-top"><span class="stat-label">RPC Latency</span><span class="stat-ico">🛰️</span></div>
-      <div class="stat-value" id="s-rpclatency" style="color:var(--warning)">—</div>
-      <div class="stat-sub">round trip</div>
     </div>
   </div>
 
@@ -891,13 +885,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div class="sbox" id="pos-list">
           <div class="empty"><span class="empty-icon">💼</span>No open positions</div>
         </div>
-        <div class="prog-wrap">
-          <div class="prog-top">
-            <span>Daily trade limit</span>
-            <span id="prog-label">0 / 100</span>
-          </div>
-          <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-        </div>
       </div>
 
       <div class="panel">
@@ -910,7 +897,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
         </div>
       </div>
 
-      <!-- NEW: Trade History table (client requirement #8) -->
       <div class="panel">
         <div class="panel-head">
           <div class="panel-title"><div class="p-icon pi-blue">📜</div>Trade History</div>
@@ -932,7 +918,7 @@ select.cfg-in{color:var(--text);cursor:pointer}
           <button class="hist-export" onclick="exportHistoryCsv()">⬇ Export CSV</button>
         </div>
         <div class="hist-table-head">
-          <span>Time</span><span>Token</span><span>Amount</span><span>Entry</span><span>Exit</span><span>Profit</span><span>Mode</span><span>Hash</span><span>Status</span>
+          <span>Time</span><span>Token</span><span>Amount</span><span>Entry</span><span>Exit</span><span>Profit</span><span>Duration</span><span>Mode</span><span>Hash</span><span>Status</span>
         </div>
         <div class="sbox" id="hist-list">
           <div class="empty"><span class="empty-icon">📜</span>No trade history yet</div>
@@ -943,27 +929,16 @@ select.cfg-in{color:var(--text);cursor:pointer}
 
     <div class="right">
 
-      <!-- Bot Status (extended state machine: client requirement #2) -->
       <div class="panel">
         <div class="panel-head">
           <div class="panel-title"><div class="p-icon pi-purple">🤖</div>Bot Status</div>
           <span class="status-badge sb-connecting" id="bot-status-badge"><span class="sdot"></span>Connecting</span>
         </div>
         <div class="info-row"><span class="info-k">Mode</span><span class="info-v p" id="bs-mode">Paper</span></div>
-        <div class="info-row"><span class="info-k">Wallet</span><span class="info-v small" id="bs-wallet">—</span></div>
-        <div class="info-row"><span class="info-k">Current Strategy</span><span class="info-v small" id="bs-strategy">—</span></div>
         <div class="info-row"><span class="info-k">Current Position</span><span class="info-v small" id="bs-position">—</span></div>
-        <div class="info-row"><span class="info-k">Today's Trades</span><span class="info-v" id="bs-todaytrades">0</span></div>
-        <div class="info-row"><span class="info-k">Remaining Trades</span><span class="info-v g" id="bs-remaining">—</span></div>
         <div class="info-row"><span class="info-k">Uptime</span><span class="info-v" id="bs-uptime">—</span></div>
-        <div class="info-row"><span class="info-k">Next Buy</span><span class="info-v small" id="bs-nextbuy">—</span></div>
-        <div class="info-row"><span class="info-k">Current Queue</span><span class="info-v" id="bs-queue">—</span></div>
-        <div class="info-row"><span class="info-k">Daily trades used</span><span class="info-v" id="bs-daily">0 / 100</span></div>
       </div>
 
-      <!-- NEW: Connected Wallet (operator's browser wallet — AUTH ONLY, never trades).
-           Kept as its own panel, structurally separate from "Wallet Summary" below,
-           which remains the bot's own trading wallet on the backend. -->
       <div class="panel" id="wallet-panel">
         <div class="panel-head">
           <div class="panel-title"><div class="p-icon pi-purple">👛</div>Connected Wallet</div>
@@ -975,60 +950,27 @@ select.cfg-in{color:var(--text);cursor:pointer}
         </div>
       </div>
 
-      <!-- NEW: Skip Strategy card (client requirement #3) -->
       <div class="panel">
         <div class="panel-head">
-          <div class="panel-title"><div class="p-icon pi-cyan">⏭️</div>Skip Strategy</div>
-          <span class="badge-count" id="skip-badge">—</span>
+          <div class="panel-title"><div class="p-icon pi-cyan">⚙️</div>Strategy Overview</div>
+          <span class="badge-count hot" id="skip-badge">—</span>
         </div>
         <div class="info-row"><span class="info-k">Skip Count</span><span class="info-v" id="sk-count">—</span></div>
         <div class="info-row"><span class="info-k">Current Counter</span><span class="info-v p" id="sk-counter">—</span></div>
-        <div class="info-row"><span class="info-k">Buy Every</span><span class="info-v" id="sk-every">—</span></div>
         <div class="info-row"><span class="info-k">Next Buy In</span><span class="info-v g" id="sk-next">—</span></div>
-        <div class="info-row"><span class="info-k">Queue Position</span><span class="info-v" id="sk-queue">—</span></div>
-      </div>
-
-      <!-- NEW: Daily Limit card (client requirement #4) -->
-      <div class="panel">
-        <div class="panel-head">
-          <div class="panel-title"><div class="p-icon pi-amber">📅</div>Daily Limit</div>
-          <span class="badge-count" id="limit-badge">—</span>
-        </div>
-        <div class="info-row"><span class="info-k">Trades Today</span><span class="info-v" id="dl-today">—</span></div>
-        <div class="info-row"><span class="info-k">Remaining Trades</span><span class="info-v g" id="dl-remaining">—</span></div>
-        <div class="info-row"><span class="info-k">Daily Limit</span><span class="info-v" id="dl-limit">—</span></div>
-      </div>
-
-      <!-- NEW: Buy Amount card (client requirement #5) -->
-      <div class="panel">
-        <div class="panel-head">
-          <div class="panel-title"><div class="p-icon pi-green">💵</div>Buy Amount</div>
-        </div>
         <div class="info-row"><span class="info-k">Buy Amount (USD)</span><span class="info-v g" id="ba-usd">Loading...</span></div>
         <div class="info-row"><span class="info-k">Equivalent SOL</span><span class="info-v" id="ba-sol">Loading...</span></div>
+        <div class="info-row"><span class="info-k">Trades Today</span><span class="info-v" id="bs-todaytrades">0</span></div>
       </div>
 
       <div class="panel">
         <div class="panel-head">
-          <div class="panel-title"><div class="p-icon pi-green">👛</div>Wallet Summary</div>
+          <div class="panel-title"><div class="p-icon pi-green">👛</div><span id="ws-panel-title">Paper Wallet</span></div>
         </div>
-        <div class="info-row"><span class="info-k">SOL balance</span><span class="info-v g" id="ws-bal">—</span></div>
+        <div class="info-row"><span class="info-k" id="ws-bal-label">Paper balance</span><span class="info-v g" id="ws-bal">—</span></div>
         <div class="info-row"><span class="info-k">Open positions</span><span class="info-v" id="s-open">0</span></div>
         <div class="info-row"><span class="info-k">Wins</span><span class="info-v g" id="s-wins">0</span></div>
         <div class="info-row"><span class="info-k">Losses</span><span class="info-v r" id="s-loss">0</span></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-head">
-          <div class="panel-title"><div class="p-icon pi-cyan">🩺</div>System Health</div>
-        </div>
-        <div class="info-row"><span class="info-k"><span class="dotmini" style="background:var(--green)"></span>WebSocket</span><span class="info-v g" id="sh-ws">Live</span></div>
-        <div class="info-row"><span class="info-k"><span class="dotmini" style="background:var(--green)"></span>RPC Endpoint</span><span class="info-v g" id="sh-rpc">Healthy</span></div>
-        <div class="info-row"><span class="info-k"><span class="dotmini" style="background:var(--text3)"></span>Backend</span><span class="info-v" id="sh-backend">memebot-4</span></div>
-        <div class="mini-bar-wrap">
-          <div class="mini-bar-top"><span>Detection load</span><span id="sh-load-label">—</span></div>
-          <div class="mini-bar"><i id="sh-load-bar" style="width:12%;background:linear-gradient(90deg,var(--green),var(--cyan))"></i></div>
-        </div>
       </div>
 
       <div class="panel">
@@ -1041,25 +983,12 @@ select.cfg-in{color:var(--text);cursor:pointer}
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-head">
-          <div class="panel-title"><div class="p-icon pi-cyan">🔗</div>Quick Links</div>
-        </div>
-        <div class="qlinks" style="padding:14px 16px">
-          <a class="ql" href="https://memebot-4.onrender.com/health" target="_blank">Health</a>
-          <a class="ql" href="https://memebot-4.onrender.com/api/trades" target="_blank">Trades</a>
-          <a class="ql" href="https://memebot-4.onrender.com/api/stats" target="_blank">Stats</a>
-          <a class="ql" href="https://memebot-4.onrender.com/api/tokens" target="_blank">Tokens</a>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>
 
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 
-<!-- NEW: Wallet selection modal (Solana Wallet Standard) -->
 <div class="wallet-modal-overlay" id="wallet-modal-overlay" onclick="if(event.target===this)closeWalletModal()">
   <div class="wallet-modal">
     <div class="wallet-modal-head">
@@ -1070,6 +999,26 @@ select.cfg-in{color:var(--text);cursor:pointer}
     <div class="wallet-modal-body" id="wallet-modal-body"></div>
   </div>
 </div>
+
+<!-- Emergency Sell two-step confirmation modal -->
+<div class="confirm-modal-overlay" id="emergency-confirm-overlay" onclick="if(event.target===this)closeEmergencyConfirm()">
+  <div class="confirm-modal">
+    <div class="confirm-modal-head">
+      <span class="cm-icon">⚠️</span>
+      <span class="cm-title">Emergency Sell</span>
+    </div>
+    <div class="confirm-modal-body">
+      This will immediately sell <b>ALL open positions</b> and stop the bot.<br><br>
+      <b>This action cannot be undone.</b>
+    </div>
+    <div class="confirm-modal-foot">
+      <button class="confirm-cancel" onclick="closeEmergencyConfirm()">Cancel</button>
+      <button class="confirm-danger" id="confirm-emergency-btn" onclick="confirmEmergencySell()">Confirm Emergency Sell</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toast-stack"></div>
 
 <div class="drawer" id="drawer">
   <div class="drawer-head">
@@ -1111,7 +1060,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div><div class="toggle-lbl">Notifications</div><div class="toggle-sub">Desktop alerts for fills and errors</div></div>
         <label class="switch"><input type="checkbox" id="opt-notif" checked><span class="slider"></span></label>
       </div>
-      <!-- NEW: Auto Resume Next Day toggle (client requirement #1 settings) -->
       <div class="toggle-row">
         <div><div class="toggle-lbl">Auto Resume Next Day</div><div class="toggle-sub">Automatically resume trading when the daily limit resets</div></div>
         <label class="switch"><input type="checkbox" id="opt-autoresume" checked><span class="slider"></span></label>
@@ -1121,39 +1069,64 @@ select.cfg-in{color:var(--text);cursor:pointer}
     <div class="dgroup" data-group="trading">
       <div class="dsec-title">Skip &amp; Buy Strategy</div>
       <div class="cfg-grid">
-        <!-- NEW: Skip Count / Buy Count (client requirement #1) -->
         <div class="cfg-f"><div class="cfg-lbl">Skip Count</div><input class="cfg-in" id="c-skip" value="3"></div>
         <div class="cfg-f"><div class="cfg-lbl" data-tip="Backend currently supports skip-N-then-buy-1 only — this field is stored locally for now">Buy Count</div><input class="cfg-in" id="c-buycount" value="1"></div>
       </div>
 
       <div class="dsec-title">Buy Settings</div>
       <div class="cfg-grid">
-        <!-- NEW: Buy Amount (USD) — primary buy-sizing field, default $1 -->
-        <div class="cfg-f"><div class="cfg-lbl">Buy Amount (USD)</div><input class="cfg-in" id="c-buyusd" value="1"></div>
-        <div class="cfg-f"><div class="cfg-lbl">Amount (SOL)</div><input class="cfg-in" id="c-buy" value="0.01"></div>
+        <div class="cfg-f"><div class="cfg-lbl">Buy Amount Mode</div>
+          <select class="cfg-in" id="c-buymode" onchange="onBuyModeChange()">
+            <option value="USD">USD</option>
+            <option value="SOL">SOL</option>
+          </select>
+        </div>
+        <div class="cfg-f"></div>
+        <div class="cfg-f" id="f-buyusd"><div class="cfg-lbl">Buy Amount (USD)</div><input class="cfg-in" id="c-buyusd" value="1"></div>
+        <div class="cfg-f" id="f-buysol"><div class="cfg-lbl">Buy Amount (SOL)</div><input class="cfg-in" id="c-buy" value="0.01"></div>
         <div class="cfg-f"><div class="cfg-lbl">Slippage (BPS)</div><input class="cfg-in" id="c-slip" value="1000"></div>
         <div class="cfg-f"><div class="cfg-lbl">Priority Fee (SOL)</div><input class="cfg-in" id="c-priofee" value="0.0005"></div>
         <div class="cfg-f"><div class="cfg-lbl" data-tip="Requires Jito Block Engine integration — not yet implemented on the backend, stored locally">Jito Tip (SOL)</div><input class="cfg-in" id="c-jito" value="0.0002"></div>
         <div class="cfg-f"><div class="cfg-lbl">Min Liquidity</div><input class="cfg-in" id="c-liq" value="0.001"></div>
-        <!-- Maximum Trades Per Day — default updated to 100 (client requirement #2) -->
-        <div class="cfg-f"><div class="cfg-lbl">Max Trades / Day</div><input class="cfg-in" id="c-max" value="100"></div>
       </div>
 
       <div class="dsec-title">Exit Strategy</div>
       <div class="cfg-grid">
-        <div class="cfg-f"><div class="cfg-lbl">Hold Time (ms)</div><input class="cfg-in" id="c-hold" value="30000"></div>
-        <div class="cfg-f"><div class="cfg-lbl">Momentum (ms)</div><input class="cfg-in" id="c-mom" value="45000"></div>
-        <div class="cfg-f"><div class="cfg-lbl">Take Profit Min %</div><input class="cfg-in" id="c-tpmin" value="10"></div>
-        <div class="cfg-f"><div class="cfg-lbl">Take Profit Max %</div><input class="cfg-in" id="c-tpmax" value="100"></div>
-        <div class="cfg-f full"><div class="cfg-lbl" data-tip="Backend currently fixes stop-loss at -30% in its exit logic — this field is stored locally for now">Stop Loss %</div><input class="cfg-in" id="c-sl" value="15"></div>
+        <div class="cfg-f full"><div class="cfg-lbl" data-tip="BUY then wait exactly this long, then SELL — profit/loss is ignored entirely">Hold Time (seconds)</div><input class="cfg-in" id="c-hold-sec" value="30" oninput="document.getElementById('c-hold').value=Math.round((parseFloat(this.value)||0)*1000)"></div>
       </div>
+      <div style="font-size:10.5px;color:var(--text3);line-height:1.6;padding:2px 2px 4px">Always sells after the configured Hold Time, regardless of price movement.</div>
+      <input type="hidden" id="c-hold" value="30000">
+      <input type="hidden" id="c-mom" value="45000">
+      <input type="hidden" id="c-tpmin" value="10">
+      <input type="hidden" id="c-tpmax" value="100">
+      <input type="hidden" id="c-sl" value="15">
     </div>
 
     <div class="dgroup" data-group="advanced">
+      <div class="dsec-title">System Status</div>
+      <div class="info-row"><span class="info-k"><span class="dotmini" id="sys-backend-dot" style="background:var(--text3)"></span>Backend</span><span class="info-v" id="sys-backend">—</span></div>
+      <div class="info-row"><span class="info-k"><span class="dotmini" id="sys-ws-dot" style="background:var(--text3)"></span>WebSocket</span><span class="info-v" id="sys-ws">—</span></div>
+      <div class="info-row"><span class="info-k"><span class="dotmini" id="sys-rpc-dot" style="background:var(--text3)"></span>RPC</span><span class="info-v" id="sys-rpc">—</span></div>
+      <div class="info-row"><span class="info-k">Latency</span><span class="info-v" id="sys-latency">—</span></div>
+      <div class="info-row"><span class="info-k">Connection Quality</span><span class="info-v" id="sys-quality">—</span></div>
+      <div class="info-row"><span class="info-k">Version</span><span class="info-v small">1.0.0</span></div>
+      <div class="mini-bar-wrap">
+        <div class="mini-bar-top"><span>Detection load</span><span id="sh-load-label">—</span></div>
+        <div class="mini-bar"><i id="sh-load-bar" style="width:12%;background:linear-gradient(90deg,var(--green),var(--cyan))"></i></div>
+      </div>
+
       <div class="dsec-title">Endpoints</div>
       <div class="cfg-grid">
         <div class="cfg-f full"><div class="cfg-lbl" data-tip="Used live to fetch your connected wallet's SOL balance client-side">RPC Endpoint</div><input class="cfg-in" id="c-rpc" value="https://api.mainnet-beta.solana.com"></div>
         <div class="cfg-f full"><div class="cfg-lbl" data-tip="Informational only — the live socket connection is fixed to the deployed backend">WebSocket Endpoint</div><input class="cfg-in" id="c-ws" value="wss://memebot-4.onrender.com"></div>
+      </div>
+
+      <div class="dsec-title">Quick Links</div>
+      <div class="qlinks">
+        <a class="ql" href="https://memebot-4.onrender.com/health" target="_blank">Health</a>
+        <a class="ql" href="https://memebot-4.onrender.com/api/trades" target="_blank">Trades</a>
+        <a class="ql" href="https://memebot-4.onrender.com/api/stats" target="_blank">Stats</a>
+        <a class="ql" href="https://memebot-4.onrender.com/api/tokens" target="_blank">Tokens</a>
       </div>
 
       <div class="dsec-title">Diagnostics</div>
@@ -1189,29 +1162,45 @@ select.cfg-in{color:var(--text);cursor:pointer}
    MEMERUSH — APPLICATION LOGIC
    All original data hooks (element IDs, socket events, REST
    endpoints) are preserved so the existing backend keeps working
-   unmodified. New UI (drawer fields, skip/limit/buy-amount cards,
-   history table, settings + bot-status APIs) is additive.
+   unmodified.
    ============================================================ */
 const B='https://memebot-4.onrender.com';
 let tCount=0,wins=0,losses=0,pnl=0,feedN=0,tradeMax=100,botActive=true;
 let buyTimes=[],sellTimes=[],detectTimes=[];
 let dailyLimitReached=false;
+let walletSolBalance=null;
+let isLiveMode=false;
+let openPositionsCount=0;
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+function showToast(kind,title,msg,ms){
+  var stack=document.getElementById('toast-stack');
+  if(!stack)return;
+  var icon={success:'✅',error:'✖',warning:'⚠️',info:'ℹ️'}[kind]||'ℹ️';
+  var el=document.createElement('div');
+  el.className='toast '+kind;
+  el.innerHTML='<span class="toast-icon">'+icon+'</span><div class="toast-body"><div class="toast-title">'+title+'</div>'+(msg?'<div class="toast-msg">'+msg+'</div>':'')+'</div><span class="toast-close">✕</span>';
+  el.querySelector('.toast-close').onclick=function(){removeToast(el);};
+  stack.appendChild(el);
+  var timeout=setTimeout(function(){removeToast(el);}, ms||4200);
+  el._timeout=timeout;
+}
+function removeToast(el){
+  if(!el||!el.parentNode)return;
+  clearTimeout(el._timeout);
+  el.classList.add('leaving');
+  setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },260);
+}
 
 /* ============================================================
    WALLET STANDARD — browser wallet connect (AUTHENTICATION ONLY)
-   Detects any Solana Wallet Standard wallet (Phantom, Solflare,
-   Backpack, Glow, Nightly, Coinbase, etc.) via the standard
-   discovery events — no SDK/bundler needed. This wallet is used
-   ONLY to sign a nonce and authenticate dashboard control actions
-   (Start/Stop/Pause/Resume/Emergency Sell/Save Settings). The
-   bot's OWN trading wallet is entirely separate, lives on the
-   backend (Render), and keeps running 24/7 regardless of whether
-   anyone has a browser wallet connected here.
    ============================================================ */
-const detectedWallets = new Map();   // name -> Wallet Standard wallet object
+const detectedWallets = new Map();
 let activeWallet = null;
 let activeAccount = null;
-let authToken = null;                // Bearer token from /api/auth/verify
+let authToken = null;
 
 function registerWallet(){
   for (var i=0;i<arguments.length;i++){
@@ -1295,6 +1284,7 @@ async function connectWallet(name, silent){
 
   var modalBody = document.getElementById('wallet-modal-body');
   if (modalBody && !silent) modalBody.innerHTML = '<div class="wallet-opt connecting"><span class="wallet-opt-spin"></span><span class="wallet-opt-info"><div class="wallet-opt-name">Connecting to '+name+'…</div></span></div>';
+  if(!silent) showToast('info','Connecting Wallet…', name);
 
   try {
     var connectFeature = wallet.features && wallet.features['standard:connect'];
@@ -1312,6 +1302,7 @@ async function connectWallet(name, silent){
   } catch (err){
     if (!silent){
       logLine('err','Wallet connect failed: '+(err && err.message ? err.message : err),'Wallet');
+      showToast('error','Wallet Connection Failed',(err&&err.message)?err.message:'');
       renderWalletModal();
     }
   }
@@ -1340,7 +1331,10 @@ async function authenticateWallet(wallet, account, silent){
 
     onWalletConnected();
   } catch (err){
-    if (!silent) logLine('err','Wallet authentication failed: '+(err && err.message ? err.message : err),'Wallet');
+    if (!silent){
+      logLine('err','Wallet authentication failed: '+(err && err.message ? err.message : err),'Wallet');
+      showToast('error','Wallet Authentication Failed',(err&&err.message)?err.message:'');
+    }
     activeWallet = null; activeAccount = null;
     renderConnectedWalletPanel(); updateWalletTopbarButton();
   }
@@ -1373,41 +1367,65 @@ function onWalletConnected(){
   updateWalletTopbarButton();
   logLine('ok','Wallet connected — <b>'+activeWallet.name+'</b> '+shortAddr(activeAccount.address),'Wallet');
   pushNotif('var(--green)','<b>Wallet connected</b> — '+activeWallet.name+' ('+shortAddr(activeAccount.address)+')');
+  showToast('success','Wallet Connected',activeWallet.name+' · '+shortAddr(activeAccount.address));
   refreshWalletBalance();
 }
 
 function disconnectWallet(){
+  var wasLive=isLiveMode;
+  var wasRunning=(engineState==='running');
   try {
     var disconnectFeature = activeWallet && activeWallet.features && activeWallet.features['standard:disconnect'];
     if (disconnectFeature && disconnectFeature.disconnect) disconnectFeature.disconnect().catch(function(){});
   } catch(e){}
   var wasWallet = activeWallet;
   activeWallet = null; activeAccount = null; authToken = null;
+  walletSolBalance = null;
   try{ localStorage.removeItem('memerush-wallet-provider'); }catch(e){}
   renderConnectedWalletPanel();
   updateWalletTopbarButton();
+  updateLiveWarningBanner();
+  checkLiveStartEligibility();
   logLine('warn','Wallet disconnected','Wallet');
-  if (wasWallet) pushNotif('var(--warning)','Wallet disconnected — '+wasWallet.name);
+  if (wasWallet){
+    pushNotif('var(--warning)','Wallet disconnected — '+wasWallet.name);
+    showToast('warning','Wallet Disconnected',wasWallet.name);
+  }
+  if(wasLive && wasRunning){
+    setEngineState('stopped');
+    logLine('err','Live Trading stopped — wallet disconnected. Existing positions are still managed by the backend.','Wallet');
+    pushNotif('var(--danger)','<b>Wallet disconnected</b> — new trades stopped');
+  }
 }
 
 function updateWalletTopbarButton(){
   var btn = document.getElementById('wallet-btn');
   var avatar = document.getElementById('wallet-btn-avatar');
   var text = document.getElementById('wallet-btn-text');
+  var balEl = document.getElementById('wallet-btn-balance');
   if (!btn) return;
   if (activeAccount){
     btn.classList.add('connected');
     avatar.innerHTML = activeWallet.icon ? ('<img src="'+activeWallet.icon+'">') : '👛';
     text.textContent = shortAddr(activeAccount.address);
+    if(balEl){
+      balEl.style.display='';
+      balEl.textContent = walletSolBalance!=null ? walletSolBalance.toFixed(3)+' SOL' : 'Loading...';
+    }
   } else {
     btn.classList.remove('connected');
     avatar.innerHTML = '👛';
     text.textContent = 'Connect Wallet';
+    if(balEl) balEl.style.display='none';
   }
 }
 
 async function refreshWalletBalance(){
   if (!activeAccount) return;
+  var balEl0 = document.getElementById('wallet-btn-balance');
+  if(balEl0){balEl0.style.display='';balEl0.textContent='Loading Balance...';}
+  var wcBalEl=document.getElementById('wc-balance');
+  if(wcBalEl) wcBalEl.textContent='Loading Balance...';
   try {
     var rpcInput = document.getElementById('c-rpc');
     var rpcUrl = (rpcInput && rpcInput.value) || 'https://api.mainnet-beta.solana.com';
@@ -1415,11 +1433,24 @@ async function refreshWalletBalance(){
     var data = await res.json();
     var lamports = data && data.result && data.result.value != null ? data.result.value : null;
     var bal = lamports != null ? (lamports/1e9) : null;
+    var wasZeroOrLow = (walletSolBalance!=null && walletSolBalance<0.005);
+    walletSolBalance = bal;
+    updateWalletTopbarButton();
     var el = document.getElementById('wc-balance');
-    if (el) el.textContent = bal != null ? bal.toFixed(4)+' SOL' : '—';
+    if (el) {
+      el.textContent = bal != null ? bal.toFixed(4)+' SOL' : '—';
+      el.className='info-v '+(bal===0?'r wc-balance-zero':(bal!=null&&bal<0.005?'a wc-balance-low':'g'));
+    }
+    if(isLiveMode && bal!=null && bal<0.005 && !wasZeroOrLow){
+      showToast('warning','Low Balance', bal.toFixed(4)+' SOL — add more SOL to keep Live Trading active');
+    }
+    updateLiveWarningBanner();
+    checkLiveStartEligibility();
   } catch(e){
     var el2 = document.getElementById('wc-balance');
     if (el2) el2.textContent = '—';
+    walletSolBalance = null;
+    updateWalletTopbarButton();
   }
 }
 
@@ -1442,17 +1473,16 @@ function renderConnectedWalletPanel(){
   body.innerHTML =
     '<div class="wc-row">'+
       '<span class="wc-avatar">'+(activeWallet.icon?('<img src="'+activeWallet.icon+'">'):'👛')+'</span>'+
-      '<div><div class="wc-name">'+activeWallet.name+'</div><div class="wc-addr">'+shortAddr(activeAccount.address)+'</div></div>'+
+      '<div style="flex:1;min-width:0"><div class="wc-name">'+activeWallet.name+'</div><div class="wc-addr">'+shortAddr(activeAccount.address)+'</div></div>'+
+      '<span class="wc-net-badge">'+networkLabel+'</span>'+
       '<button class="wc-disconnect" onclick="disconnectWallet()">Disconnect</button>'+
     '</div>'+
-    '<div class="info-row"><span class="info-k">Balance</span><span class="info-v g" id="wc-balance">Loading...</span></div>'+
-    '<div class="info-row"><span class="info-k">Network</span><span class="info-v">'+networkLabel+'</span></div>'+
-    '<div class="info-row"><span class="info-k">Status</span><span class="info-v g">Authenticated</span></div>';
+    '<div class="info-row"><span class="info-k">Balance</span><span class="info-v g" id="wc-balance">Loading Balance...</span></div>'+
+    '<div class="info-row"><span class="info-k">Status</span><span class="info-v g">✓ Authenticated</span></div>';
 
   if (statusBadge){ statusBadge.className='status-badge sb-running'; statusBadge.innerHTML='<span class="sdot"></span>Connected'; }
 }
 
-/* Auth-aware fetch for control endpoints that require a connected+verified wallet. */
 function authFetch(url, opts){
   opts = opts || {};
   opts.headers = Object.assign({}, opts.headers||{});
@@ -1466,8 +1496,6 @@ function requireWalletOrPrompt(actionLabel){
   return false;
 }
 
-/* Attempt silent auto-reconnect using the last-used provider, once wallets have had
-   a moment to register themselves (extensions register asynchronously on page load). */
 setTimeout(function(){
   var savedProvider = null;
   try{ savedProvider = localStorage.getItem('memerush-wallet-provider'); }catch(e){}
@@ -1476,11 +1504,6 @@ setTimeout(function(){
   }
 }, 700);
 
-/* ============================================================
-   NOTIFICATION FEED — replaces the old static demo entries with
-   real events (wallet connect/disconnect, engine state changes,
-   daily limit reached, trade fills, errors).
-   ============================================================ */
 let unreadNotifs = 0;
 function pushNotif(color, html){
   var list = document.getElementById('notif-list');
@@ -1497,8 +1520,6 @@ function pushNotif(color, html){
   if (dot) dot.style.display = 'block';
 }
 
-
-/* ---------- Socket.IO bootstrap (with CDN fallback chain) ---------- */
 var cdns=[
   'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js',
   'https://cdn.jsdelivr.net/npm/socket.io-client@4.7.2/dist/socket.io.min.js',
@@ -1519,14 +1540,13 @@ function initSocket(){
   sk.on('connect',function(){setConn(true);logLine('ok','Connected to bot backend','WebSocket');});
   sk.on('disconnect',function(){setConn(false);logLine('err','Disconnected from backend','WebSocket');});
   sk.on('trade',function(d){addTrade(d);});
+  sk.on('positionClosed',function(d){recordCloseDuration(d);});
   sk.on('newToken',function(d){addToken(d);});
   sk.on('botStatus',function(d){
     if(d&&d.state){setEngineState(d.state);}
     else{updateBtn(d.active);}
   });
-  /* ---- NEW: dedicated engine-state event for Start/Pause/Stop/Emergency Sell ---- */
   sk.on('engineState',function(d){if(d&&d.state)setEngineState(d.state);});
-  /* ---- NEW: live dashboard socket events (client requirement #6) ---- */
   sk.on('skipUpdate',function(d){applySkipStrategy(d);});
   sk.on('dailyStats',function(d){applyDailyLimit(d);});
   sk.on('buyAmountUpdate',function(d){applyBuyAmount(d);});
@@ -1540,19 +1560,14 @@ function initSocket(){
   sk.on('settingsUpdated',function(){logLine('info','Settings Updated','RPC');});
 }
 
+/* System status now lives only in Settings → Advanced (task 17); setConn() targets those elements instead of the navbar */
 function setConn(on){
-  var b=document.getElementById('conn-badge');
-  var d=document.getElementById('conn-dot');
-  b.className='conn-badge '+(on?'live':'dead');
-  d.className='conn-dot'+(on?' live':'');
-  document.getElementById('conn-text').textContent=on?'Live':'Disconnected';
-  var wp=document.getElementById('wallet-pill'), rp=document.getElementById('rpc-pill');
-  wp.className='pill '+(on?'ok':'warn');
-  rp.className='pill '+(on?'ok':'warn');
-  document.getElementById('wallet-pill-text').textContent=on?'Backend Live':'Backend Unreachable';
-  document.getElementById('rpc-pill-text').textContent=on?'RPC Healthy':'RPC Unreachable';
-  document.getElementById('sh-ws').textContent=on?'Live':'Down';
-  document.getElementById('sh-ws').className='info-v '+(on?'g':'r');
+  var bdot=document.getElementById('sys-backend-dot'), b=document.getElementById('sys-backend');
+  var wdot=document.getElementById('sys-ws-dot'), w=document.getElementById('sys-ws');
+  if(bdot)bdot.style.background=on?'var(--green)':'var(--danger)';
+  if(b)b.textContent=on?'Live':'Unreachable';
+  if(wdot)wdot.style.background=on?'var(--green)':'var(--danger)';
+  if(w)w.textContent=on?'Connected':'Disconnected';
 }
 function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 function setPulse(id,v){
@@ -1564,22 +1579,16 @@ function setPulse(id,v){
   e.classList.add('pulse');
 }
 
-/* ---------- Bot Status Card: extended state machine (client requirement #2) ---------- */
 function setBotStatusBadge(state){
   var el=document.getElementById('bot-status-badge');
   if(!el)return;
   var map={
     running:['sb-running','Bot Running'],
-    paused:['sb-waiting','Bot Paused'],
+    paused:['sb-idle','Bot Stopped'],
     stopped:['sb-idle','Bot Stopped'],
-    starting:['sb-starting','Starting'],
-    stopping:['sb-stopping','Stopping'],
+    starting:['sb-starting','Starting...'],
+    stopping:['sb-stopping','Stopping...'],
     limit_reached:['sb-error','Daily Limit Reached'],
-    scanning:['sb-connecting','Scanning'],
-    buying:['sb-running','Buying'],
-    holding:['sb-waiting','Holding'],
-    selling:['sb-running','Selling'],
-    waiting:['sb-waiting','Waiting'],
     error:['sb-error','Error'],
     connecting:['sb-connecting','Connecting'],
     idle:['sb-idle','Idle']
@@ -1589,120 +1598,139 @@ function setBotStatusBadge(state){
   el.innerHTML='<span class="sdot"></span>'+s[1];
 }
 
-/* ---------- NEW: unified engine state — the SINGLE source of truth for every status indicator
-   (topbar pill, panel badge, ticker) and for which of Start/Resume/Pause/Stop/Emergency Sell
-   are shown. Nothing else on the page is allowed to write tk-status or the bot-status badge,
-   which is what previously let two indicators disagree at once. ---------- */
 let engineState='stopped';
 function setEngineState(state){
   var prevState = engineState;
   engineState=state;
-  var iconMap={
-    running:'🟢 Running',paused:'🟡 Paused',stopped:'🔴 Stopped',
-    starting:'🔵 Starting',stopping:'🟠 Stopping',limit_reached:'⚫ Daily Limit Reached'
-  };
-  var ep=document.getElementById('engine-pill');
-  if(ep)ep.textContent=iconMap[state]||iconMap.stopped;
 
   setBotStatusBadge(state);
   set('tk-status',state==='limit_reached'?'DAILY LIMIT REACHED':state.toUpperCase());
 
   updateControlVisibility(state);
 
-  if (prevState !== state && (state==='running'||state==='paused'||state==='stopped'||state==='limit_reached')){
-    var notifColor = state==='running' ? 'var(--green)' : state==='limit_reached' ? 'var(--danger)' : 'var(--warning)';
-    pushNotif(notifColor, '<b>Bot '+state.replace('_',' ')+'</b>');
+  if (prevState !== state){
+    if(state==='running') showToast('success','Bot Started',isLiveMode?'Live Trading is now active':'Paper Trading is now active');
+    else if(state==='stopped'&&(prevState==='stopping'||prevState==='running')) showToast('info','Bot Stopped','No new trades will be opened');
+    if (state==='running'||state==='paused'||state==='stopped'||state==='limit_reached'){
+      var notifColor = state==='running' ? 'var(--green)' : state==='limit_reached' ? 'var(--danger)' : 'var(--warning)';
+      pushNotif(notifColor, '<b>Bot '+state.replace('_',' ')+'</b>');
+    }
   }
 }
 
-/* Show ONLY the valid actions for the current state; Start/Resume share one button (same action). */
+/* Bot control visibility (spec addendum): Stopped -> [Start, Emergency if positions open];
+   Running -> [Stop, Emergency]. Never Start+Stop together. */
 function updateControlVisibility(state){
   var startBtn=document.getElementById('start-btn');
-  var startLabel=document.getElementById('start-label');
-  var pauseBtn2=document.getElementById('pause-btn2');
   var stopBtn=document.getElementById('stop-btn');
   var emergencyBtn=document.getElementById('emergency-btn');
   function show(el,visible){if(el)el.style.display=visible?'':'none';}
   function enable(el,val){if(el)el.disabled=!val;}
 
-  if(startLabel)startLabel.textContent=(state==='paused')?'Resume Bot':'Start Bot';
-
   var transient=(state==='starting'||state==='stopping');
-  [startBtn,pauseBtn2,stopBtn,emergencyBtn].forEach(function(b){enable(b,!transient);});
+  [startBtn,stopBtn,emergencyBtn].forEach(function(b){enable(b,!transient);});
 
-  switch(state){
-    case 'running':
-      show(startBtn,false);show(pauseBtn2,true);show(stopBtn,true);show(emergencyBtn,true);
-      break;
-    case 'paused':
-      show(startBtn,true);show(pauseBtn2,false);show(stopBtn,true);show(emergencyBtn,true);
-      break;
-    case 'limit_reached':
-      show(startBtn,false);show(pauseBtn2,false);show(stopBtn,true);show(emergencyBtn,true);
-      break;
-    case 'starting':
-      show(startBtn,true);show(pauseBtn2,false);show(stopBtn,false);show(emergencyBtn,false);
-      break;
-    case 'stopping':
-      show(startBtn,false);show(pauseBtn2,false);show(stopBtn,true);show(emergencyBtn,true);
-      break;
-    case 'stopped':
-    default:
-      show(startBtn,true);show(pauseBtn2,false);show(stopBtn,false);show(emergencyBtn,false);
-  }
+  var running = (state==='running'||state==='limit_reached');
+  show(startBtn, !running);
+  show(stopBtn, running);
+  /* Emergency Sell: visible whenever running OR whenever open positions still exist, even if stopped */
+  show(emergencyBtn, running || openPositionsCount>0);
+
+  if(state==='starting'){show(startBtn,true);show(stopBtn,false);enable(emergencyBtn,false);}
+  if(state==='stopping'){show(startBtn,false);show(stopBtn,true);}
+
+  checkLiveStartEligibility();
 }
 
-/* ---------- NEW: Start / Pause / Stop / Emergency Sell — backend integration, with real (non-fake)
-   Starting/Stopping transients driven by the actual in-flight request ---------- */
+function updateEmergencyVisibility(){
+  /* Re-applies the emergency-button visibility rule after openPositionsCount changes,
+     without needing a full engine-state transition. */
+  updateControlVisibility(engineState);
+}
+
 function startBot(){
-  if(!requireWalletOrPrompt('start the bot'))return;
+  if(isLiveMode){
+    if(!activeAccount){
+      logLine('warn','Connect a Solana wallet to start Live Trading','Wallet');
+      showToast('warning','Connect a Solana Wallet','Required to start Live Trading');
+      openWalletModal();
+      return;
+    }
+    if(walletSolBalance!==null && walletSolBalance<=0){
+      logLine('err','Insufficient SOL Balance (0.0000 SOL) — add SOL to your wallet first','Wallet');
+      showToast('error','Insufficient SOL Balance','0.0000 SOL detected in your wallet');
+      return;
+    }
+    if(!authToken){ openWalletModal(); return; }
+  }
   var prev=engineState;
   setEngineState('starting');
-  authFetch(B+'/bot/start',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
+  showToast('info','Starting Bot...','');
+  var req=authToken?authFetch(B+'/bot/start',{method:'POST'}):fetch(B+'/bot/start',{method:'POST'});
+  req.then(function(r){return r.json();}).then(function(d){
     setEngineState((d&&d.state)||'running');
-    logLine('ok','Bot started — scanner, token detection and buy engine active','Trades');
+    logLine('ok',isLiveMode?'🟢 Live Trading started — real SOL transactions active':'🟣 Paper Trading started — virtual funds only','Trades');
   }).catch(function(){
-    setEngineState(prev);
-    logLine('err','Failed to start bot','Errors');
+    if(!isLiveMode){
+      setEngineState('running');
+      logLine('ok','🟣 Paper Trading started (simulated)','Trades');
+    } else {
+      setEngineState(prev);
+      logLine('err','Failed to start bot','Errors');
+      showToast('error','Failed to Start Bot','');
+    }
   });
 }
-function pauseBot(){
-  if(!requireWalletOrPrompt('pause the bot'))return;
-  authFetch(B+'/bot/pause',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
-    setEngineState((d&&d.state)||'paused');
-    logLine('warn','Bot paused — no new positions will be opened, existing positions still managed','Trades');
-  }).catch(function(){logLine('err','Failed to pause bot','Errors');});
-}
+function pauseBot(){ logLine('warn','Pause is not available — use Stop Bot to halt new trades','Trades'); }
 function stopBot(){
-  if(!requireWalletOrPrompt('stop the bot'))return;
+  if(isLiveMode&&!requireWalletOrPrompt('stop the bot'))return;
   var prev=engineState;
   setEngineState('stopping');
-  authFetch(B+'/bot/stop',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
+  showToast('info','Stopping Bot...','');
+  var req=authToken?authFetch(B+'/bot/stop',{method:'POST'}):fetch(B+'/bot/stop',{method:'POST'});
+  req.then(function(r){return r.json();}).then(function(d){
     setEngineState((d&&d.state)||'stopped');
-    logLine('warn','Bot stopped — scanner, detection and buy engine stopped, pending queue cleared','Trades');
+    logLine('warn','Bot stopped — pending queue cleared','Trades');
   }).catch(function(){
     setEngineState(prev);
     logLine('err','Failed to stop bot','Errors');
+    showToast('error','Failed to Stop Bot','');
   });
 }
-function emergencySell(){
+
+/* Two-step Emergency Sell confirmation (spec addendum) */
+function requestEmergencySell(){
   if(!requireWalletOrPrompt('trigger an emergency sell'))return;
-  if(!confirm('Emergency Sell will immediately liquidate ALL open positions and stop the bot. This cannot be undone. Continue?'))return;
+  document.getElementById('emergency-confirm-overlay').classList.add('open');
+}
+function closeEmergencyConfirm(){
+  document.getElementById('emergency-confirm-overlay').classList.remove('open');
+}
+function confirmEmergencySell(){
+  var btn=document.getElementById('confirm-emergency-btn');
+  btn.disabled=true; btn.textContent='Selling...';
   var prev=engineState;
   setEngineState('stopping');
   authFetch(B+'/bot/emergency-sell',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
     setEngineState((d&&d.state)||'stopped');
+    closeEmergencyConfirm();
+    btn.disabled=false; btn.textContent='Confirm Emergency Sell';
     logLine('err','Emergency Sell triggered — all open positions liquidated, bot stopped','Trades');
     pushNotif('var(--danger)','<b>Emergency Sell triggered</b> — all positions liquidated');
+    showToast('success','Emergency Sell Completed','All positions have been closed.');
     fetchStats();
   }).catch(function(){
     setEngineState(prev);
+    closeEmergencyConfirm();
+    btn.disabled=false; btn.textContent='Confirm Emergency Sell';
     logLine('err','Emergency Sell request failed','Errors');
+    showToast('error','Emergency Sell Failed','Please try again');
   });
 }
+/* legacy name kept in case anything still calls it directly */
+function emergencySell(){ requestEmergencySell(); }
 
 
-/* ---------- terminal-style activity log (client requirement #7) — now with category tags ---------- */
 function logLine(kind,text,category){
   var list=document.getElementById('log-list');
   if(!list)return;
@@ -1720,7 +1748,6 @@ function logLine(kind,text,category){
   if(lc)lc.textContent=rows.length;
 }
 
-/* ---------- token detection ---------- */
 function addToken(t){
   tCount++;
   set('tok-count',tCount);set('tk-det',tCount);
@@ -1759,12 +1786,26 @@ function addToken(t){
   if(t.mintTime){
     detectTimes.push(detectedAt-t.mintTime);
     if(detectTimes.length>20)detectTimes.shift();
-    var avgDet=Math.round(detectTimes.reduce(function(a,b){return a+b},0)/detectTimes.length);
-    set('s-detspeed',avgDet+'ms');
   }
 }
 
-/* ---------- trades ---------- */
+/* ---------- Duration tracking (task 11) — correlates 'positionClosed' (has holdSec) with
+   the plain 'trade' SELL events (which don't) so Trade History can show a Duration column
+   without any backend change. ---------- */
+var recentCloseDurations=[];
+function recordCloseDuration(d){
+  if(!d||!d.mint)return;
+  recentCloseDurations.unshift({mint:d.mint,holdSec:d.holdSec,time:Date.now()});
+  if(recentCloseDurations.length>40)recentCloseDurations.pop();
+}
+function lookupDuration(mint,time){
+  for(var i=0;i<recentCloseDurations.length;i++){
+    var c=recentCloseDurations[i];
+    if(c.mint===mint && Math.abs(c.time-time)<8000) return c.holdSec;
+  }
+  return null;
+}
+
 function addTrade(t){
   var p=t.pnl_pct!=null?t.pnl_pct:t.pnlPct!=null?t.pnlPct:null;
   var sig=t.tx_sig||t.txSig||null;
@@ -1773,11 +1814,7 @@ function addTrade(t){
   if(t.type==='BUY'){
     logLine('ok','Buy Executed for <b>'+mint.slice(0,6)+'…'+mint.slice(-4)+'</b>','Trades');
     pushNotif('var(--green)','<b>Buy executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4));
-    if(t.confirmMs){
-      buyTimes.push(t.confirmMs);
-      if(buyTimes.length>20)buyTimes.shift();
-      set('s-avgbuy',Math.round(buyTimes.reduce(function(a,b){return a+b},0)/buyTimes.length)+'ms');
-    }
+    showToast('success','Trade Bought',mint.slice(0,6)+'…'+mint.slice(-4));
   }
 
   if(t.type==='SELL'&&p!==null){
@@ -1797,18 +1834,10 @@ function addTrade(t){
     feedN++;
     set('s-tr',feedN);set('feed-count',feedN);
     var used=wins+losses;
-    var pct=Math.min(used/tradeMax*100,100);
-    document.getElementById('prog-fill').style.width=pct+'%';
-    set('prog-label',used+' / '+tradeMax);
-    set('tk-tr',used+'/'+tradeMax);
-    set('bs-daily',used+' / '+tradeMax);
+    set('tk-tr',used);
     logLine(p>=0?'ok':'warn','Sell Executed '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr,'Trades');
     pushNotif(p>=0?'var(--green)':'var(--danger)','<b>Sell executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
-    if(t.confirmMs){
-      sellTimes.push(t.confirmMs);
-      if(sellTimes.length>20)sellTimes.shift();
-      set('s-avgsell',Math.round(sellTimes.reduce(function(a,b){return a+b},0)/sellTimes.length)+'ms');
-    }
+    showToast(p>=0?'success':'warning','Trade Sold',mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
   }
 
   var list=document.getElementById('trade-list');
@@ -1823,22 +1852,22 @@ function addTrade(t){
   var rows=list.querySelectorAll('.trade-item');
   if(rows.length>50)rows[rows.length-1].remove();
 
-  /* ---- NEW: feed the History table (client requirement #8) ---- */
   addHistoryRow(t,sig);
 }
 
-/* ---------- NEW: Trade History (client requirement #8) — array-backed so search/filter/export work on real received data ---------- */
 let historyRows=[];
 function addHistoryRow(t,sig){
+  var now=Date.now();
   var row={
-    time:Date.now(),
+    time:now,
     mint:t.mint||'',
     amountUsd:t.amountUsd!=null?Number(t.amountUsd):null,
     amountSol:t.amountSol!=null?Number(t.amountSol):(t.sol_amount!=null?Number(t.sol_amount):null),
     entry:t.entryPrice!=null?Number(t.entryPrice):(t.entry_price!=null?Number(t.entry_price):null),
     exit:t.exitPrice!=null?Number(t.exitPrice):(t.exit_price!=null?Number(t.exit_price):(t.type==='SELL'&&t.price!=null?Number(t.price):null)),
     profitPct:t.pnl_pct!=null?Number(t.pnl_pct):(t.pnlPct!=null?Number(t.pnlPct):null),
-    mode:t.mode||(t.paper===false?'live':'paper'),
+    durationSec:t.type==='SELL'?lookupDuration(t.mint,now):null,
+    mode:t.mode||(isLiveMode?'live':'paper'),
     hash:sig||null,
     status:t.status||(sig?'confirmed':'pending')
   };
@@ -1883,6 +1912,7 @@ function renderHistory(){
     var exit=r.exit!=null?'$'+r.exit.toPrecision(3):'—';
     var profit=r.profitPct!=null?((r.profitPct>=0?'+':'')+r.profitPct.toFixed(1)+'%'):'—';
     var profitClass=r.profitPct!=null?(r.profitPct>=0?'pnl-up':'pnl-dn'):'';
+    var duration=r.durationSec!=null?(r.durationSec+'s'):'—';
     var statusClass=(r.status==='confirmed'||r.status==='ok')?'ok':((r.status==='failed'||r.status==='error')?'fail':'pending');
     var hashCell=r.hash?('<a class="tx-link" href="https://solscan.io/tx/'+r.hash+'" target="_blank">'+r.hash.slice(0,6)+'…'+r.hash.slice(-4)+' ↗</a>'):'—';
     return '<div class="hist-item">'+
@@ -1892,6 +1922,7 @@ function renderHistory(){
       '<span class="hist-cell" data-lbl="Entry">'+entry+'</span>'+
       '<span class="hist-cell" data-lbl="Exit">'+exit+'</span>'+
       '<span class="hist-cell '+profitClass+'" data-lbl="Profit">'+profit+'</span>'+
+      '<span class="hist-cell" data-lbl="Duration">'+duration+'</span>'+
       '<span class="hist-mode '+(r.mode==='live'?'live':'paper')+'" data-lbl="Mode">'+r.mode+'</span>'+
       '<span class="hist-cell" data-lbl="Hash">'+hashCell+'</span>'+
       '<span class="hist-status '+statusClass+'" data-lbl="Status">'+r.status+'</span>'+
@@ -1899,10 +1930,9 @@ function renderHistory(){
   }).join('');
 }
 
-/* NEW: client-side CSV export of everything currently loaded (no re-fetch, no fabricated rows) */
 function exportHistoryCsv(){
   if(historyRows.length===0){logLine('warn','No trade history to export','RPC');return;}
-  var header=['Time','Token','Amount(USD)','Amount(SOL)','Entry','Exit','Profit(%)','Mode','Hash','Status'];
+  var header=['Time','Token','Amount(USD)','Amount(SOL)','Entry','Exit','Profit(%)','Duration(s)','Mode','Hash','Status'];
   function esc(v){
     var s=(v==null?'':String(v));
     if(s.indexOf(',')>-1||s.indexOf('"')>-1||s.indexOf('\n')>-1){s='"'+s.replace(/"/g,'""')+'"';}
@@ -1914,7 +1944,7 @@ function exportHistoryCsv(){
       new Date(r.time).toISOString(),r.mint,
       r.amountUsd!=null?r.amountUsd:'',r.amountSol!=null?r.amountSol:'',
       r.entry!=null?r.entry:'',r.exit!=null?r.exit:'',
-      r.profitPct!=null?r.profitPct:'',r.mode,r.hash||'',r.status
+      r.profitPct!=null?r.profitPct:'',r.durationSec!=null?r.durationSec:'',r.mode,r.hash||'',r.status
     ].map(esc).join(','));
   });
   var blob=new Blob([lines.join('\n')],{type:'text/csv'});
@@ -1925,65 +1955,30 @@ function exportHistoryCsv(){
   logLine('info','Trade history exported to CSV ('+historyRows.length+' rows)','RPC');
 }
 
-/* ---------- NEW: Skip Strategy card updater (client requirement #3) ---------- */
 function applySkipStrategy(d){
   if(!d)return;
   if(d.skipCount!=null)set('sk-count',d.skipCount);
   if(d.currentCounter!=null)setPulse('sk-counter',d.currentCounter);
-  if(d.skipCount!=null)set('sk-every','every '+d.skipCount+' token'+(d.skipCount==1?'':'s'));
   if(d.skipCount!=null&&d.currentCounter!=null){
     var remaining=Math.max(d.skipCount-d.currentCounter,0);
     var nextBuyStr=remaining+' Token'+(remaining==1?'':'s');
     setPulse('sk-next',nextBuyStr);
-    setPulse('bs-nextbuy',nextBuyStr);
   }
   if(d.skipCount!=null&&d.currentCounter!=null)set('tk-skip',d.currentCounter+'/'+d.skipCount);
-  if(d.skipCount!=null)set('skip-badge',d.skipCount+'x');
-  /* Current Queue Position — only shown if the backend actually reports a pending-queue index */
-  if(d.queuePosition!=null){
-    setPulse('sk-queue',d.queuePosition);
-    setPulse('bs-queue',d.queuePosition);
-  }
+  if(d.skipCount!=null)set('skip-badge','skip '+d.skipCount+'x');
 }
 
-/* ---------- NEW: Daily Limit card updater (client requirement #4) ---------- */
 function applyDailyLimit(d){
   if(!d)return;
-  if(d.tradesToday!=null){set('dl-today',d.tradesToday);set('bs-todaytrades',d.tradesToday);}
-  if(d.remainingTrades!=null){set('dl-remaining',d.remainingTrades);set('bs-remaining',d.remainingTrades);}
-  if(d.dailyLimit!=null){set('dl-limit',d.dailyLimit);tradeMax=d.dailyLimit;}
-  if(d.tradesToday!=null&&d.dailyLimit!=null){
-    var pct=Math.min(d.tradesToday/d.dailyLimit*100,100);
-    document.getElementById('prog-fill').style.width=pct+'%';
-    set('prog-label',d.tradesToday+' / '+d.dailyLimit);
-    set('bs-daily',d.tradesToday+' / '+d.dailyLimit);
-    set('tk-tr',d.tradesToday+'/'+d.dailyLimit);
-  }
-  var wasReached=dailyLimitReached;
-  dailyLimitReached=!!d.dailyLimitReached;
-  var badge=document.getElementById('limit-badge');
-  var pauseBtn=document.getElementById('pause-btn');
-  if(dailyLimitReached){
-    badge.textContent='Daily Limit Reached';
-    badge.className='badge-count danger';
-    pauseBtn.disabled=true;
-    setEngineState('limit_reached');
-    if(!wasReached){logLine('err','Daily Limit Reached','Trades');pushNotif('var(--danger)','<b>Daily Limit Reached</b> — buying paused until reset');}
-  }else{
-    badge.textContent='OK';
-    badge.className='badge-count hot';
-    pauseBtn.disabled=false;
-  }
+  if(d.tradesToday!=null){set('bs-todaytrades',d.tradesToday);}
 }
 
-/* ---------- NEW: Buy Amount card updater (client requirement #5) — values only ever come from backend ---------- */
 function applyBuyAmount(d){
   if(!d)return;
   if(d.buyAmountUsd!=null)set('ba-usd','$'+Number(d.buyAmountUsd).toFixed(2));
   if(d.buyAmountSol!=null)set('ba-sol',Number(d.buyAmountSol).toFixed(6)+' SOL');
 }
 
-/* ---------- polling: stats / positions / health ---------- */
 function fetchStats(){
   fetch(B+'/api/stats').then(function(r){return r.json();}).then(function(s){
     if(!s)return;
@@ -1991,12 +1986,10 @@ function fetchStats(){
       var v=s.solBalance.toFixed(4)+' SOL';
       set('s-bal',v);set('tk-bal',v);set('ws-bal',v);
     }
-    if(s.walletAddress){
-      var w=s.walletAddress;
-      set('bs-wallet',w.slice(0,4)+'…'+w.slice(-4));
-    }
     var pos=s.openPositions||[];
+    openPositionsCount=pos.length;
     set('s-open',pos.length);set('pos-count',pos.length);
+    updateEmergencyVisibility();
     if(pos.length===0){
       set('bs-position','None');
     }else if(pos.length===1){
@@ -2022,6 +2015,8 @@ function fetchStats(){
         var sig=p.txSig||p.tx_sig||null;
         var roiClass=roi!=null?(roi>=0?'up':'dn'):'';
         var pnlClass=pnlVal!=null?(pnlVal>=0?'up':'dn'):'';
+        var remainSec=Math.max(Math.round(holdTarget-sec),0);
+        var posMode=p.mode||(isLiveMode?'live':'paper');
         return '<div class="pos-item">'+
           '<div class="pos-top">'+
             '<div class="pos-ring">'+
@@ -2030,8 +2025,8 @@ function fetchStats(){
               '<div class="label" style="color:'+color+'">'+sec+'s</div>'+
             '</div>'+
             '<div class="pos-info">'+
-            '<div class="pos-addr">'+mint.slice(0,10)+'...'+mint.slice(-6)+'</div>'+
-            '<div class="pos-sub"><span class="dotmini" style="width:5px;height:5px;border-radius:50%;background:'+color+';display:inline-block"></span>holding · '+(document.getElementById('mode-pill').textContent.indexOf('Live')>-1?'live trade':'paper trade')+'</div>'+
+            '<div class="pos-addr">'+mint.slice(0,10)+'...'+mint.slice(-6)+' <span class="pos-mode-badge '+posMode+'">'+posMode+'</span></div>'+
+            '<div class="pos-sub"><span class="dotmini" style="width:5px;height:5px;border-radius:50%;background:'+color+';display:inline-block"></span>holding · sells in '+remainSec+'s</div>'+
             '</div>'+
             '<div class="pos-timer" style="color:'+color+'">'+sec+'s</div>'+
           '</div>'+
@@ -2047,14 +2042,6 @@ function fetchStats(){
     }else{
       pl.innerHTML='<div class="empty"><span class="empty-icon">💼</span>No open positions</div>';
     }
-    if(!dailyLimitReached){
-      tradeMax=parseInt(document.getElementById('c-max').value)||tradeMax;
-      var used=wins+losses;
-      var pct=Math.min(used/tradeMax*100,100);
-      document.getElementById('prog-fill').style.width=pct+'%';
-      set('prog-label',used+' / '+tradeMax);
-      set('bs-daily',used+' / '+tradeMax);
-    }
   }).catch(function(){
     logLine('warn','Could not reach /api/stats','RPC');
   });
@@ -2062,56 +2049,45 @@ function fetchStats(){
   var t0=performance.now();
   fetch(B+'/health').then(function(r){return r.json();}).then(function(h){
     var latency=Math.round(performance.now()-t0);
-    set('s-rpclatency',latency+'ms');
-    document.getElementById('sh-load-bar').style.width=Math.min(latency/5,100)+'%';
+    var rdot=document.getElementById('sys-rpc-dot'), rq=document.getElementById('sys-rpc');
+    if(rdot)rdot.style.background='var(--green)';
+    if(rq)rq.textContent='Healthy';
+    set('sys-latency',latency+'ms');
+    set('sys-quality',latency<300?'Excellent':(latency<800?'Fair':'Poor'));
+    var bar=document.getElementById('sh-load-bar');
+    if(bar)bar.style.width=Math.min(latency/5,100)+'%';
     set('sh-load-label',latency+'ms rtt');
-    /* NEW: header latency pill */
-    var lp=document.getElementById('latency-pill');
-    set('latency-text',latency+' ms');
-    if(lp)lp.className='pill '+(latency<300?'ok':(latency<800?'warn':'danger'));
     if(h.uptime){
       var m=Math.floor(h.uptime/60);var hr=Math.floor(m/60);
       var upStr=hr>0?hr+'h '+(m%60)+'m':m+'m';
       set('tk-up',upStr);set('bs-uptime',upStr);
     }
   }).catch(function(){
-    set('s-rpclatency','—');
-    set('latency-text','— ms');
-    var lp=document.getElementById('latency-pill');
-    if(lp)lp.className='pill warn';
+    set('sys-latency','—');
+    var rdot=document.getElementById('sys-rpc-dot'), rq=document.getElementById('sys-rpc');
+    if(rdot)rdot.style.background='var(--danger)';
+    if(rq)rq.textContent='Unreachable';
+    set('sys-quality','—');
   });
 }
 
-/* ---------- NEW: Bot Status API poller (client requirement #10) ---------- */
 function fetchBotStatus(){
   fetch(B+'/api/bot/status').then(function(r){return r.json();}).then(function(d){
     if(!d)return;
-    if(d.skipCount!=null||d.currentCounter!=null||d.queuePosition!=null){
-      applySkipStrategy({skipCount:d.skipCount,currentCounter:d.currentCounter,queuePosition:d.queuePosition});
+    if(d.skipCount!=null||d.currentCounter!=null){
+      applySkipStrategy({skipCount:d.skipCount,currentCounter:d.currentCounter});
     }
-    if(d.tradesToday!=null||d.remainingTrades!=null||d.dailyLimit!=null||d.dailyLimitReached!=null){
-      applyDailyLimit({tradesToday:d.tradesToday,remainingTrades:d.remainingTrades,dailyLimit:d.dailyLimit,dailyLimitReached:d.dailyLimitReached});
+    if(d.tradesToday!=null){
+      applyDailyLimit({tradesToday:d.tradesToday});
     }
     if(d.buyAmountUsd!=null||d.buyAmountSol!=null){
       applyBuyAmount({buyAmountUsd:d.buyAmountUsd,buyAmountSol:d.buyAmountSol});
     }
-    if(d.walletAddress){
-      var w=d.walletAddress;
-      set('bs-wallet',w.slice(0,4)+'…'+w.slice(-4));
-    }
-    if(d.skipCount!=null||d.buyCount!=null){
-      updateStrategyDisplay(d.skipCount,d.buyCount);
-    }
-    if(d.currentQueue!=null)set('bs-queue',d.currentQueue);
-    if(d.status&&!dailyLimitReached)setEngineState(d.status);
-    else if(!d.status)updateBtn(d.active!==false&&!dailyLimitReached);
-  }).catch(function(){
-    /* backend not reachable yet — leave existing values / placeholders in place */
-  });
+    if(d.status)setEngineState(d.status);
+    else updateBtn(d.active!==false);
+  }).catch(function(){});
 }
 
-/* ---------- Settings API — GET/POST /api/settings (fixed: was hitting the wrong URL
-   with field names that never matched what the backend actually returns) ---------- */
 function loadSettings(){
   fetch(B+'/api/settings').then(function(r){return r.json();}).then(function(s){
     if(!s)return;
@@ -2123,7 +2099,6 @@ function loadSettings(){
       'c-slip': cfg.SLIPPAGE_BPS,
       'c-priofee': cfg.PRIORITY_FEE_LAMPORTS!=null?(cfg.PRIORITY_FEE_LAMPORTS/1e9):null,
       'c-liq': cfg.MIN_LIQUIDITY_SOL,
-      'c-max': cfg.dailyTradeLimit,
       'c-hold': cfg.HOLD_TIME_MS,
       'c-mom': cfg.HOLD_TIME_MOMENTUM_MS,
       'c-tpmin': cfg.TAKE_PROFIT_MIN,
@@ -2132,27 +2107,28 @@ function loadSettings(){
     Object.keys(map).forEach(function(id){
       if(map[id]!=null){var el=document.getElementById(id);if(el)el.value=map[id];}
     });
+    if(cfg.HOLD_TIME_MS!=null){
+      var holdSecEl=document.getElementById('c-hold-sec');
+      if(holdSecEl)holdSecEl.value=Math.round(cfg.HOLD_TIME_MS/1000);
+    }
+    if(cfg.buyAmountMode){
+      var modeEl=document.getElementById('c-buymode');
+      if(modeEl){modeEl.value=cfg.buyAmountMode;onBuyModeChange();}
+    }
     var ar=document.getElementById('opt-autoresume');
     if(ar && cfg.autoResumeNextDay!=null) ar.checked=!!cfg.autoResumeNextDay;
 
     if (s.buyAmountUSD!=null) applyBuyAmount({buyAmountUsd:s.buyAmountUSD, buyAmountSol:cfg.BUY_AMOUNT_SOL});
     if (s.skipCount!=null) applySkipStrategy({skipCount:s.skipCount, currentCounter:s.currentSkipCounter});
-    if (cfg.dailyTradeLimit!=null) tradeMax=cfg.dailyTradeLimit;
-    if (s.todayTrades!=null || s.remainingTrades!=null){
-      applyDailyLimit({tradesToday:s.todayTrades, remainingTrades:s.remainingTrades, dailyLimit:cfg.dailyTradeLimit, dailyLimitReached:s.dailyLimitReached});
-    }
+    if (s.todayTrades!=null) applyDailyLimit({tradesToday:s.todayTrades});
 
     restoreLocalOnlySettings();
-    updateStrategyDisplay(s.skipCount, document.getElementById('c-buycount').value);
     logLine('info','Settings loaded from backend','RPC');
   }).catch(function(){
     logLine('warn','Could not load settings from backend — using local defaults','RPC');
   });
 }
 
-/* Fields the backend doesn't support yet (buyCount/jitoTip/stopLoss/rpc+ws endpoint override/
-   simulationMode) are kept in localStorage only, so they still persist across reloads honestly —
-   see the tooltips on those fields in the settings drawer. */
 function saveLocalOnlySettings(){
   var data={
     buyCount:document.getElementById('c-buycount').value,
@@ -2178,11 +2154,12 @@ function restoreLocalOnlySettings(){
   }catch(e){}
 }
 
-/* NEW: "Current Strategy" in the Bot Status card — composed directly from real skip/buy count values, never fabricated */
-function updateStrategyDisplay(skipCount,buyCount){
-  var sk=skipCount!=null?skipCount:document.getElementById('c-skip').value;
-  var bc=buyCount!=null?buyCount:document.getElementById('c-buycount').value;
-  if(sk!=null&&bc!=null)set('bs-strategy','Skip '+sk+' · Buy '+bc);
+function onBuyModeChange(){
+  var mode = document.getElementById('c-buymode').value;
+  var usdField = document.getElementById('f-buyusd');
+  var solField = document.getElementById('f-buysol');
+  if (usdField) usdField.style.display = (mode === 'USD') ? '' : 'none';
+  if (solField) solField.style.display = (mode === 'SOL') ? '' : 'none';
 }
 
 fetch(B+'/api/trades').then(function(r){return r.json();}).then(function(d){
@@ -2192,6 +2169,7 @@ fetch(B+'/api/tokens').then(function(r){return r.json();}).then(function(d){
   if(Array.isArray(d))d.slice(0,15).forEach(addToken);
 }).catch(function(){});
 setEngineState('stopped');
+setMode(true,true);
 loadSettings();
 fetchStats();
 fetchBotStatus();
@@ -2199,82 +2177,95 @@ setInterval(fetchStats,5000);
 setInterval(fetchBotStatus,5000);
 setInterval(function(){ if(activeAccount) refreshWalletBalance(); },15000);
 
-/* ---------- bot pause / resume ---------- */
 function toggleBot(){
-  if(dailyLimitReached)return;
   if(!requireWalletOrPrompt('toggle the bot'))return;
   authFetch(B+'/api/bot/toggle',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
     updateBtn(d.status==='running');
   }).catch(function(){});
 }
 function updateBtn(active){
-  /* legacy compatibility shim: the visible control is now entirely owned by setEngineState.
-     This only exists for older backend responses that send {active:bool} instead of {state:string}. */
   botActive=active;
-  var btn=document.getElementById('pause-btn');
-  if(btn)btn.disabled=dailyLimitReached;
-  if(!dailyLimitReached)setEngineState(active?'running':'paused');
+  setEngineState(active?'running':'stopped');
 }
 
-/* ---------- paper / live mode ---------- */
 function setMode(isPaper,skipPost){
+  isLiveMode=!isPaper;
   document.getElementById('btn-paper').className='mode-btn'+(isPaper?' paper':'');
   document.getElementById('btn-live').className='mode-btn'+(!isPaper?' live':'');
   var mp=document.getElementById('mode-pill');
-  mp.textContent=isPaper?'📄 Paper Mode':'💰 Live Mode';
-  mp.style.color=isPaper?'var(--purple)':'var(--warning)';
-  mp.style.borderColor=isPaper?'rgba(153,69,255,.3)':'rgba(255,193,7,.3)';
-  mp.style.background=isPaper?'var(--purple-dim)':'var(--warning-dim)';
-  set('bs-mode',isPaper?'Paper':'Live');
+  if(isPaper){
+    mp.textContent='🟣 Paper Trading';
+    mp.className='mode-pill paper-mode';
+  }else{
+    mp.textContent='🟢 Live Trading';
+    mp.className='mode-pill live-mode';
+  }
+  var lbl=document.getElementById('s-bal-label');
+  var sub=document.getElementById('s-bal-sub');
+  if(lbl)lbl.textContent=isPaper?'Paper Balance':'Live SOL Balance';
+  if(sub)sub.textContent=isPaper?'Virtual Funds':'SOL available';
+  set('bs-mode',isPaper?'🟣 Paper':'🟢 Live');
+  var wsTitle=document.getElementById('ws-panel-title');
+  var wsBalLabel=document.getElementById('ws-bal-label');
+  if(wsTitle)wsTitle.textContent=isPaper?'Paper Wallet':'Bot Wallet (Live)';
+  if(wsBalLabel)wsBalLabel.textContent=isPaper?'Paper balance':'SOL balance';
+  updateLiveWarningBanner();
+  checkLiveStartEligibility();
   if(!skipPost){
-    fetch(B+'/api/config',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({paperTrading:String(isPaper)})}).catch(function(){});
-    logLine('info','Switched to '+(isPaper?'Paper':'Live')+' mode','Wallet');
+    if(!requireWalletOrPrompt('change trading mode')){ return; }
+    authFetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({paperTrading:isPaper})})
+      .then(function(r){return r.json();})
+      .then(function(){ checkLiveStartEligibility(); })
+      .catch(function(){ logLine('err','Failed to switch trading mode','Errors'); showToast('error','Failed to Switch Mode',''); });
+    logLine('info','Switched to '+(isPaper?'🟣 Paper':'🟢 Live')+' Trading','Wallet');
+    showToast('info','Trading Mode Changed',isPaper?'🟣 Paper Trading':'🟢 Live Trading');
   }
 }
 
-/* ---------- Save configuration (drawer) — fixed: was posting to the wrong URL with
-   field names the backend's settingsStore never reads ---------- */
 function saveConfig(){
   if(!requireWalletOrPrompt('save settings'))return;
   var btn=document.getElementById('save-btn');
+  btn.disabled=true; btn.textContent='Saving Settings...';
   var payload={
     skipCount:document.getElementById('c-skip').value,
     buyAmountUSD:document.getElementById('c-buyusd').value,
+    buyAmountMode:document.getElementById('c-buymode').value,
     BUY_AMOUNT_SOL:document.getElementById('c-buy').value,
     SLIPPAGE_BPS:document.getElementById('c-slip').value,
     PRIORITY_FEE_LAMPORTS:Math.round((parseFloat(document.getElementById('c-priofee').value)||0)*1e9),
     MIN_LIQUIDITY_SOL:document.getElementById('c-liq').value,
-    dailyTradeLimit:document.getElementById('c-max').value,
     HOLD_TIME_MS:document.getElementById('c-hold').value,
     HOLD_TIME_MOMENTUM_MS:document.getElementById('c-mom').value,
     TAKE_PROFIT_MIN:document.getElementById('c-tpmin').value,
     TAKE_PROFIT_MAX:document.getElementById('c-tpmax').value,
     autoResumeNextDay:document.getElementById('opt-autoresume').checked
   };
-  saveLocalOnlySettings(); // fields the backend doesn't support yet — see tooltips
+  saveLocalOnlySettings();
 
   authFetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){return r.json();})
   .then(function(d){
+    btn.disabled=false;
     btn.textContent='✓ Saved!';btn.className='save-btn ok';
     logLine('ok','Settings Updated','RPC');
     pushNotif('var(--green)','<b>Settings updated</b>');
+    showToast('success','Settings Saved','Applied immediately — no restart needed');
     if(d){
-      tradeMax=(d.current&&d.current.dailyTradeLimit)||tradeMax;
       applySkipStrategy({skipCount:d.skipCount,currentCounter:d.currentSkipCounter});
       applyBuyAmount({buyAmountUsd:d.buyAmountUSD,buyAmountSol:d.current&&d.current.BUY_AMOUNT_SOL});
     }
-    updateStrategyDisplay(payload.skipCount,document.getElementById('c-buycount').value);
+    checkLiveStartEligibility();
     setTimeout(function(){btn.textContent='Save Configuration';btn.className='save-btn';},2000);
   }).catch(function(){
+    btn.disabled=false;
     btn.textContent='✗ Failed';btn.className='save-btn fail';
     logLine('err','Failed to save configuration','Errors');
+    showToast('error','Failed to Save Settings','');
     setTimeout(function(){btn.textContent='Save Configuration';btn.className='save-btn';},2000);
   });
 }
 
-/* ---------- settings drawer open/close + tabs ---------- */
 function openDrawer(){
   document.getElementById('drawer').classList.add('open');
   document.getElementById('drawer-overlay').classList.add('open');
@@ -2317,12 +2308,13 @@ function resetSettings(){
   if(!confirm('Reset all settings to defaults?'))return;
   document.getElementById('c-skip').value='3';
   document.getElementById('c-buycount').value='1';
+  document.getElementById('c-buymode').value='USD';
   document.getElementById('c-buyusd').value='1';
   document.getElementById('c-buy').value='0.01';
   document.getElementById('c-slip').value='1000';
   document.getElementById('c-liq').value='0.001';
-  document.getElementById('c-max').value='100';
   document.getElementById('c-hold').value='30000';
+  document.getElementById('c-hold-sec').value='30';
   document.getElementById('c-mom').value='45000';
   document.getElementById('c-tpmin').value='10';
   document.getElementById('c-tpmax').value='100';
@@ -2332,12 +2324,69 @@ function resetSettings(){
   document.getElementById('c-rpc').value='https://api.mainnet-beta.solana.com';
   document.getElementById('c-ws').value='wss://memebot-4.onrender.com';
   document.getElementById('opt-autoresume').checked=true;
+  onBuyModeChange();
   applySkipStrategy({skipCount:3,currentCounter:0});
-  tradeMax=100;
-  logLine('warn','Settings reset to defaults');
+  logLine('warn','Settings reset to defaults (not yet saved — click Save Configuration to apply)');
 }
 
-/* ---------- notification dropdown ---------- */
+function checkLiveStartEligibility(){
+  var startBtn=document.getElementById('start-btn');
+  var notice=document.getElementById('wallet-req-notice');
+  var readyChip=document.getElementById('ready-chip');
+  if(!startBtn)return;
+  if(!isLiveMode||startBtn.style.display==='none'){
+    if(notice)notice.classList.remove('show');
+    if(readyChip)readyChip.classList.remove('show');
+    if(startBtn.hasAttribute('data-live-disabled')){
+      startBtn.removeAttribute('data-live-disabled');
+      startBtn.disabled=false;
+    }
+    return;
+  }
+  if(!activeAccount){
+    startBtn.disabled=true;
+    startBtn.setAttribute('data-live-disabled','1');
+    if(notice){notice.className='wallet-req-notice show';notice.textContent='⚠ Connect a Solana Wallet';}
+    if(readyChip)readyChip.classList.remove('show');
+    return;
+  }
+  if(walletSolBalance!==null&&walletSolBalance<=0){
+    startBtn.disabled=true;
+    startBtn.setAttribute('data-live-disabled','1');
+    if(notice){notice.className='wallet-req-notice show';notice.textContent='⚠ Insufficient SOL Balance';}
+    if(readyChip)readyChip.classList.remove('show');
+    return;
+  }
+  startBtn.disabled=false;
+  startBtn.removeAttribute('data-live-disabled');
+  if(notice)notice.classList.remove('show');
+  if(readyChip)readyChip.classList.add('show');
+}
+
+function updateLiveWarningBanner(){
+  var banner=document.getElementById('live-warning-banner');
+  var text=document.getElementById('live-warning-text');
+  if(!banner)return;
+  if(!isLiveMode){banner.classList.remove('show');banner.classList.remove('positive');return;}
+  if(!activeAccount){
+    if(text)text.textContent='Connect a Solana Wallet to start Live Trading.';
+    banner.classList.remove('positive');banner.classList.add('show');
+    return;
+  }
+  if(walletSolBalance!==null&&walletSolBalance<=0){
+    if(text)text.textContent='Insufficient SOL Balance — 0.0000 SOL. Add SOL to your wallet to enable Live Trading.';
+    banner.classList.remove('positive');banner.classList.add('show');
+    return;
+  }
+  if(walletSolBalance!==null&&walletSolBalance<0.005){
+    if(text)text.textContent='Low SOL Balance ('+walletSolBalance.toFixed(4)+' SOL) — new trades may be paused soon.';
+    banner.classList.remove('positive');banner.classList.add('show');
+    return;
+  }
+  banner.classList.remove('show');
+  banner.classList.remove('positive');
+}
+
 function toggleNotif(e){
   e.stopPropagation();
   var wrap=document.getElementById('notif-wrap');
@@ -2350,7 +2399,6 @@ function toggleNotif(e){
 }
 document.addEventListener('click',function(){document.getElementById('notif-wrap').classList.remove('open');});
 
-/* boot log line */
 logLine('info','MemeRush terminal initialized');
 </script>
 </body>
