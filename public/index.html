@@ -961,6 +961,9 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div class="info-row"><span class="info-k">Buy Amount (USD)</span><span class="info-v g" id="ba-usd">Loading...</span></div>
         <div class="info-row"><span class="info-k">Equivalent SOL</span><span class="info-v" id="ba-sol">Loading...</span></div>
         <div class="info-row"><span class="info-k">Trades Today</span><span class="info-v" id="bs-todaytrades">0</span></div>
+        <div style="padding:9px 16px;font-size:9.5px;color:var(--text3);font-family:'JetBrains Mono',monospace;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px">
+          <span style="color:var(--green)">●</span> Shared by 🟣 Paper &amp; 🟢 Live — same Skip Count, Buy Amount and Hold Time drive both, always
+        </div>
       </div>
 
       <div class="panel">
@@ -1067,6 +1070,9 @@ select.cfg-in{color:var(--text);cursor:pointer}
     </div>
 
     <div class="dgroup" data-group="trading">
+      <div style="display:flex;align-items:center;gap:7px;padding:9px 11px;margin-bottom:12px;border-radius:8px;background:var(--green-dim);border:1px solid rgba(20,241,149,.25);font-size:10.5px;color:var(--green);font-family:'JetBrains Mono',monospace">
+        <span>🟣🟢</span><span>These settings are <b>global</b> — Paper and Live Trading always use the exact same Skip Count, Buy Amount and Hold Time. Only the wallet differs.</span>
+      </div>
       <div class="dsec-title">Skip &amp; Buy Strategy</div>
       <div class="cfg-grid">
         <div class="cfg-f"><div class="cfg-lbl">Skip Count</div><input class="cfg-in" id="c-skip" value="3"></div>
@@ -1384,6 +1390,7 @@ function disconnectWallet(){
   try{ localStorage.removeItem('memerush-wallet-provider'); }catch(e){}
   renderConnectedWalletPanel();
   updateWalletTopbarButton();
+  updatePrimaryBalanceDisplay(false);
   updateLiveWarningBanner();
   checkLiveStartEligibility();
   logLine('warn','Wallet disconnected','Wallet');
@@ -1420,12 +1427,43 @@ function updateWalletTopbarButton(){
   }
 }
 
+let solUsdPrice = null;
+async function refreshSolUsdPrice(){
+  try {
+    var r = await fetch(B+'/api/price/sol-usd');
+    var d = await r.json();
+    if (d && d.price) solUsdPrice = d.price;
+  } catch(e){ /* keep last known price */ }
+  updatePrimaryBalanceDisplay(false);
+}
+
+/* Live Mode: hero "Balance" card + ticker + sidebar wallet panel ALL show the
+   CONNECTED wallet's balance — USD primary, SOL secondary — never a dash.
+   Paper Mode is untouched by this function (driven by /api/stats instead). */
+function updatePrimaryBalanceDisplay(loading){
+  if(!isLiveMode) return;
+  if(loading){
+    set('s-bal','Loading Balance...');
+    set('s-bal-sub','Loading...');
+    return;
+  }
+  var sol = walletSolBalance!=null ? walletSolBalance : 0;
+  var usd = (walletSolBalance!=null && solUsdPrice!=null) ? (walletSolBalance*solUsdPrice) : 0;
+  var usdStr = '$'+usd.toFixed(2);
+  var solStr = sol.toFixed(4)+' SOL';
+  set('s-bal', usdStr);
+  set('s-bal-sub', solStr);
+  set('tk-bal', usdStr);
+  set('ws-bal', solStr);
+}
+
 async function refreshWalletBalance(){
   if (!activeAccount) return;
   var balEl0 = document.getElementById('wallet-btn-balance');
   if(balEl0){balEl0.style.display='';balEl0.textContent='Loading Balance...';}
   var wcBalEl=document.getElementById('wc-balance');
   if(wcBalEl) wcBalEl.textContent='Loading Balance...';
+  updatePrimaryBalanceDisplay(true);
   try {
     var rpcInput = document.getElementById('c-rpc');
     var rpcUrl = (rpcInput && rpcInput.value) || 'https://api.mainnet-beta.solana.com';
@@ -1438,19 +1476,21 @@ async function refreshWalletBalance(){
     updateWalletTopbarButton();
     var el = document.getElementById('wc-balance');
     if (el) {
-      el.textContent = bal != null ? bal.toFixed(4)+' SOL' : '—';
-      el.className='info-v '+(bal===0?'r wc-balance-zero':(bal!=null&&bal<0.005?'a wc-balance-low':'g'));
+      el.textContent = bal != null ? bal.toFixed(4)+' SOL' : '0.0000 SOL';
+      el.className='info-v '+(bal===0||bal==null?'r wc-balance-zero':(bal<0.005?'a wc-balance-low':'g'));
     }
     if(isLiveMode && bal!=null && bal<0.005 && !wasZeroOrLow){
       showToast('warning','Low Balance', bal.toFixed(4)+' SOL — add more SOL to keep Live Trading active');
     }
+    updatePrimaryBalanceDisplay(false);
     updateLiveWarningBanner();
     checkLiveStartEligibility();
   } catch(e){
     var el2 = document.getElementById('wc-balance');
-    if (el2) el2.textContent = '—';
+    if (el2) el2.textContent = '0.0000 SOL';
     walletSolBalance = null;
     updateWalletTopbarButton();
+    updatePrimaryBalanceDisplay(false);
   }
 }
 
@@ -1684,13 +1724,18 @@ function startBot(){
 function pauseBot(){ logLine('warn','Pause is not available — use Stop Bot to halt new trades','Trades'); }
 function stopBot(){
   if(isLiveMode&&!requireWalletOrPrompt('stop the bot'))return;
+  var hadOpenPositions=openPositionsCount>0;
   var prev=engineState;
   setEngineState('stopping');
   showToast('info','Stopping Bot...','');
   var req=authToken?authFetch(B+'/bot/stop',{method:'POST'}):fetch(B+'/bot/stop',{method:'POST'});
   req.then(function(r){return r.json();}).then(function(d){
     setEngineState((d&&d.state)||'stopped');
-    logLine('warn','Bot stopped — pending queue cleared','Trades');
+    logLine('warn','Bot stopped — scanning, buying and automatic selling all halted','Trades');
+    if(hadOpenPositions){
+      logLine('warn',openPositionsCount+' open position(s) are now unmonitored — they will NOT auto-sell until Start Bot is pressed again. Use Emergency Sell to close them now if needed.','Trades');
+      showToast('warning','Bot Stopped — Positions Frozen',openPositionsCount+' open position(s) will not auto-sell until you press Start Bot again');
+    }
   }).catch(function(){
     setEngineState(prev);
     logLine('err','Failed to stop bot','Errors');
@@ -1815,6 +1860,7 @@ function addTrade(t){
     logLine('ok','Buy Executed for <b>'+mint.slice(0,6)+'…'+mint.slice(-4)+'</b>','Trades');
     pushNotif('var(--green)','<b>Buy executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4));
     showToast('success','Trade Bought',mint.slice(0,6)+'…'+mint.slice(-4));
+    if(isLiveMode && activeAccount) refreshWalletBalance();
   }
 
   if(t.type==='SELL'&&p!==null){
@@ -1838,6 +1884,7 @@ function addTrade(t){
     logLine(p>=0?'ok':'warn','Sell Executed '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr,'Trades');
     pushNotif(p>=0?'var(--green)':'var(--danger)','<b>Sell executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
     showToast(p>=0?'success':'warning','Trade Sold',mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
+    if(isLiveMode && activeAccount) refreshWalletBalance();
   }
 
   var list=document.getElementById('trade-list');
@@ -1982,7 +2029,7 @@ function applyBuyAmount(d){
 function fetchStats(){
   fetch(B+'/api/stats').then(function(r){return r.json();}).then(function(s){
     if(!s)return;
-    if(s.solBalance!=null){
+    if(s.solBalance!=null && !isLiveMode){
       var v=s.solBalance.toFixed(4)+' SOL';
       set('s-bal',v);set('tk-bal',v);set('ws-bal',v);
     }
@@ -2175,6 +2222,8 @@ fetchStats();
 fetchBotStatus();
 setInterval(fetchStats,5000);
 setInterval(fetchBotStatus,5000);
+refreshSolUsdPrice();
+setInterval(refreshSolUsdPrice,30000);
 setInterval(function(){ if(activeAccount) refreshWalletBalance(); },15000);
 
 function toggleBot(){
@@ -2202,8 +2251,8 @@ function setMode(isPaper,skipPost){
   }
   var lbl=document.getElementById('s-bal-label');
   var sub=document.getElementById('s-bal-sub');
-  if(lbl)lbl.textContent=isPaper?'Paper Balance':'Live SOL Balance';
-  if(sub)sub.textContent=isPaper?'Virtual Funds':'SOL available';
+  if(lbl)lbl.textContent=isPaper?'Paper Balance':'Wallet Balance';
+  if(sub && isPaper)sub.textContent='Virtual Funds';
   set('bs-mode',isPaper?'🟣 Paper':'🟢 Live');
   var wsTitle=document.getElementById('ws-panel-title');
   var wsBalLabel=document.getElementById('ws-bal-label');
@@ -2211,6 +2260,14 @@ function setMode(isPaper,skipPost){
   if(wsBalLabel)wsBalLabel.textContent=isPaper?'Paper balance':'SOL balance';
   updateLiveWarningBanner();
   checkLiveStartEligibility();
+  /* Immediately refresh whichever balance source is now authoritative for this
+     mode — never leave the previous mode's stale value showing. */
+  if(isPaper){
+    fetchStats();
+  } else {
+    refreshSolUsdPrice();
+    if(activeAccount) refreshWalletBalance(); else updatePrimaryBalanceDisplay(false);
+  }
   if(!skipPost){
     if(!requireWalletOrPrompt('change trading mode')){ return; }
     authFetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},
