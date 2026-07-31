@@ -1018,6 +1018,23 @@ select.cfg-in{color:var(--text);cursor:pointer}
   </div>
 </div>
 
+<div class="confirm-modal-overlay" id="live-switch-confirm-overlay" onclick="if(event.target===this)closeLiveSwitchConfirm()">
+  <div class="confirm-modal">
+    <div class="confirm-modal-head">
+      <span class="cm-icon">🟢</span>
+      <span class="cm-title">Switch to Live Trading?</span>
+    </div>
+    <div class="confirm-modal-body">
+      Paper Trading is <b>currently running</b>. Switching now will make the bot start placing <b>real trades on Solana mainnet</b> from its own configured wallet, starting with the next detected token.<br><br>
+      Your connected wallet is only for dashboard authentication — the bot trades from its own separate wallet, not from your Phantom balance.
+    </div>
+    <div class="confirm-modal-foot">
+      <button class="confirm-cancel" onclick="closeLiveSwitchConfirm()">Stay in Paper</button>
+      <button class="confirm-danger" onclick="confirmLiveSwitch()">Switch to Live Now</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-stack" id="toast-stack"></div>
 
 <div class="drawer" id="drawer">
@@ -1074,6 +1091,13 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div class="cfg-f" id="f-buyusd"><div class="cfg-lbl">Buy Amount (USD)</div><input class="cfg-in" id="c-buyusd" value="1"></div>
         <div class="cfg-f" id="f-buysol"><div class="cfg-lbl">Buy Amount (SOL)</div><input class="cfg-in" id="c-buy" value="0.01"></div>
       </div>
+
+      <div class="dsec-title">Market Cap Filter</div>
+      <div class="cfg-grid">
+        <div class="cfg-f"><div class="cfg-lbl" data-tip="Skip tokens below this market cap">Minimum Market Cap (USD)</div><input class="cfg-in" id="c-mincap" value="0"></div>
+        <div class="cfg-f"><div class="cfg-lbl" data-tip="Skip tokens above this market cap">Maximum Market Cap (USD)</div><input class="cfg-in" id="c-maxcap" value="1000000000"></div>
+      </div>
+      <div style="font-size:10.5px;color:var(--text3);line-height:1.6;padding:2px 2px 4px">Only buys tokens whose current market cap falls within this range — anything outside it is skipped before the trade is placed.</div>
 
       <div class="dsec-title">Hold Time</div>
       <div class="cfg-grid">
@@ -1336,19 +1360,28 @@ function onWalletConnected(){
   showToast('success','Wallet Connected',activeWallet.name+' · '+shortAddr(activeAccount.address));
   refreshWalletBalance();
 
-  // Show Live stats once a wallet is connected, not stale Paper stats — but
-  // only switch the actual trading mode when it's safe to (bot not running).
-  // CONFIG.paperTrading is read live on every buy, so flipping it while the
-  // bot is already running Paper Trading could make it start placing real
-  // trades mid-session, which is a very different thing from a display switch.
+  // Show Live stats once a wallet is connected, not stale Paper stats.
+  // If the bot is already running in Paper mode, switching CONFIG.paperTrading
+  // immediately would make it start placing real trades on its very next
+  // detected token — that's a genuinely different consequence than switching
+  // while stopped, so it gets one explicit confirmation instead of happening
+  // silently. If the bot is stopped, switch immediately with no extra step.
   if(!isLiveMode){
     if(engineState==='running'){
-      logLine('warn','Wallet connected while Paper Trading is running — Stop Bot first to switch to Live Trading','Wallet');
-      showToast('warning','Stop Bot to Switch','Paper Trading is running — Stop Bot first to switch to Live Trading');
+      document.getElementById('live-switch-confirm-overlay').classList.add('open');
     } else {
       setMode(false);
     }
   }
+}
+
+function closeLiveSwitchConfirm(){
+  document.getElementById('live-switch-confirm-overlay').classList.remove('open');
+}
+function confirmLiveSwitch(){
+  closeLiveSwitchConfirm();
+  setMode(false);
+  logLine('warn','Switched to Live Trading while running — the bot will place real trades starting with the next detected token','Wallet');
 }
 
 function disconnectWallet(){
@@ -2204,7 +2237,9 @@ function loadSettings(){
       'c-skip': s.skipCount,
       'c-buyusd': s.buyAmountUSD,
       'c-buy': cfg.BUY_AMOUNT_SOL,
-      'c-hold': cfg.HOLD_TIME_MS
+      'c-hold': cfg.HOLD_TIME_MS,
+      'c-mincap': cfg.minMarketCapUSD,
+      'c-maxcap': cfg.maxMarketCapUSD
     };
     Object.keys(map).forEach(function(id){
       if(map[id]!=null){var el=document.getElementById(id);if(el)el.value=map[id];}
@@ -2337,7 +2372,9 @@ function saveConfig(){
     buyAmountUSD:document.getElementById('c-buyusd').value,
     buyAmountMode:document.getElementById('c-buymode').value,
     BUY_AMOUNT_SOL:document.getElementById('c-buy').value,
-    HOLD_TIME_MS:document.getElementById('c-hold').value
+    HOLD_TIME_MS:document.getElementById('c-hold').value,
+    minMarketCapUSD:document.getElementById('c-mincap').value,
+    maxMarketCapUSD:document.getElementById('c-maxcap').value
   };
   saveLocalOnlySettings();
 
@@ -2410,6 +2447,8 @@ function resetSettings(){
   document.getElementById('c-buy').value='0.01';
   document.getElementById('c-hold').value='30000';
   document.getElementById('c-hold-sec').value='30';
+  document.getElementById('c-mincap').value='0';
+  document.getElementById('c-maxcap').value='1000000000';
   document.getElementById('c-rpc').value='https://api.mainnet-beta.solana.com';
   onBuyModeChange();
   applySkipStrategy({skipCount:3,currentCounter:0});
