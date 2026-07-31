@@ -757,7 +757,7 @@ select.cfg-in{color:var(--text);cursor:pointer}
 <div class="topbar">
 
   <div class="logo">
-    <div class="logo-mark"><img src="/public/logo/memebot-logo.png" alt="MemeRush logo"></div>
+    <div class="logo-mark"><a href="https://ibb.co/BKKqLDFF"><img src="https://i.ibb.co/3YYB1XQQ/memebot-logo.png" alt="memebot-logo" border="0"></a></div>
     <div class="logo-text">
       <div class="logo-name">MemeRush</div>
       <div class="logo-tag">pump.fun · raydium · solana</div>
@@ -1920,6 +1920,14 @@ function lookupDuration(mint,time){
 }
 
 function addTrade(t, silent){
+  // Never mix Paper and Live: a trade tagged for the other mode is ignored
+  // completely here — it won't touch wins/losses/PnL/trade count/history/feed.
+  // Trades recorded before the mode column existed default to 'paper' (same
+  // default the backend migration uses), since that's what the bot always
+  // ran in before Live mode was added.
+  var tradeMode = t.mode || 'paper';
+  if (tradeMode !== (isLiveMode ? 'live' : 'paper')) return;
+
   var p=t.pnl_pct!=null?t.pnl_pct:t.pnlPct!=null?t.pnlPct:null;
   var sig=t.tx_sig||t.txSig||null;
   var mint=t.mint||'';
@@ -1993,6 +2001,32 @@ function addHistoryRow(t,sig){
   historyRows.unshift(row);
   if(historyRows.length>200)historyRows.pop();
   renderHistory();
+}
+
+/* Resets every trade-derived stat/history element and re-fetches ONLY the
+   current mode's trades — this is what actually keeps Paper and Live
+   completely separate, rather than relying on the mode-gate in addTrade()
+   alone to hide stale numbers left over from the other mode. */
+function loadTradeHistory(){
+  wins=0; losses=0; pnl=0; feedN=0;
+  historyRows=[];
+  set('s-wins',0); set('s-loss',0); set('s-wr','0W / 0L');
+  var wrEl=document.getElementById('s-wr-val'); if(wrEl) wrEl.textContent='—';
+  set('tk-wr','—');
+  var pe=document.getElementById('s-pnl'); if(pe){pe.textContent='+0.0%';pe.style.color='var(--text2)';}
+  var tp=document.getElementById('tk-pnl'); if(tp){tp.textContent='+0.0%';tp.className='ticker-val';}
+  set('s-tr',0); set('feed-count',0); set('tk-tr',0);
+  var list=document.getElementById('trade-list');
+  if(list) list.innerHTML='<div class="empty"><span class="empty-icon">📊</span>Waiting for trades...</div>';
+  renderHistory();
+
+  var mode = isLiveMode?'live':'paper';
+  fetch(B+'/api/trades?mode='+mode).then(function(r){return r.json();}).then(function(d){
+    // /api/trades returns most-recent-first, but addTrade() prepends each row —
+    // feeding them in as-is would visually reverse the order. Reverse first so
+    // the most recent trade ends up on top after all the prepends.
+    if(Array.isArray(d)) d.slice().reverse().forEach(function(t){ addTrade(t, true); });
+  }).catch(function(){});
 }
 
 function renderHistory(){
@@ -2258,6 +2292,7 @@ function loadSettings(){
     // Paper Trading: the display never checked the backend's real state, it
     // just hardcoded Paper on every page load regardless of reality.
     if(cfg.paperTrading!=null) setMode(cfg.paperTrading!==false, true);
+    loadTradeHistory();
 
     if (s.buyAmountUSD!=null) applyBuyAmount({buyAmountUsd:s.buyAmountUSD, buyAmountSol:cfg.BUY_AMOUNT_SOL});
     if (s.skipCount!=null) applySkipStrategy({skipCount:s.skipCount, currentCounter:s.currentSkipCounter});
@@ -2296,9 +2331,6 @@ function onBuyModeChange(){
   if (solField) solField.style.display = (mode === 'SOL') ? '' : 'none';
 }
 
-fetch(B+'/api/trades').then(function(r){return r.json();}).then(function(d){
-  if(Array.isArray(d))d.forEach(function(t){ addTrade(t, true); }); // silent: historical hydration, not new events
-}).catch(function(){});
 fetch(B+'/api/tokens').then(function(r){return r.json();}).then(function(d){
   if(Array.isArray(d))d.slice(0,15).forEach(function(t){ addToken(t, true); }); // silent: historical hydration
 }).catch(function(){});
@@ -2360,6 +2392,7 @@ function setMode(isPaper,skipPost){
       .catch(function(){ logLine('err','Failed to switch trading mode','Errors'); showToast('error','Failed to Switch Mode',''); });
     logLine('info','Switched to '+(isPaper?'🟣 Paper':'🟢 Live')+' Trading','Wallet');
     showToast('info','Trading Mode Changed',isPaper?'🟣 Paper Trading':'🟢 Live Trading');
+    loadTradeHistory();
   }
 }
 
