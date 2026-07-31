@@ -793,8 +793,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
     </div>
     <span class="wallet-req-notice" id="wallet-req-notice">⚠ Connect wallet for Live Trading</span>
 
-    <button class="btn btn-pause" id="pause-btn" onclick="toggleBot()" title="Legacy pause" style="display:none">⏸ Pause</button>
-
     <div class="notif-wrap" id="notif-wrap">
       <button class="icon-btn" onclick="toggleNotif(event)" title="Notifications" id="notif-btn">
         🔔<span class="badge-dot" id="notif-dot" style="display:none"></span>
@@ -945,8 +943,7 @@ select.cfg-in{color:var(--text);cursor:pointer}
           <span class="status-badge sb-idle" id="wc-status"><span class="sdot"></span>Not Connected</span>
         </div>
         <div id="wallet-panel-body">
-          <div class="empty"><span class="empty-icon">👛</span>Connect a wallet to authenticate dashboard controls</div>
-          <button class="wc-connect-cta" onclick="openWalletModal()">+ Connect Wallet</button>
+          <div class="empty"><span class="empty-icon">👛</span>Not connected — use the <b>Connect Wallet</b> button above</div>
         </div>
       </div>
 
@@ -1053,26 +1050,21 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div><div class="toggle-lbl">Light mode</div><div class="toggle-sub">High-contrast daytime theme</div></div>
         <label class="switch"><input type="checkbox" id="opt-light" onchange="syncThemeToggle('light')"><span class="slider"></span></label>
       </div>
-
-      <div class="dsec-title">Behavior</div>
-      <div class="toggle-row">
-        <div><div class="toggle-lbl">Auto Resume Next Day</div><div class="toggle-sub">Automatically resume trading when the daily limit resets</div></div>
-        <label class="switch"><input type="checkbox" id="opt-autoresume" checked><span class="slider"></span></label>
-      </div>
     </div>
 
     <div class="dgroup" data-group="trading">
       <div style="display:flex;align-items:center;gap:7px;padding:9px 11px;margin-bottom:12px;border-radius:8px;background:var(--green-dim);border:1px solid rgba(20,241,149,.25);font-size:10.5px;color:var(--green);font-family:'JetBrains Mono',monospace">
         <span>🟣🟢</span><span>These settings are <b>global</b> — Paper and Live Trading always use the exact same Skip Count, Buy Amount and Hold Time. Only the wallet differs.</span>
       </div>
-      <div class="dsec-title">Skip &amp; Buy Strategy</div>
+
+      <div class="dsec-title">Skip Strategy</div>
       <div class="cfg-grid">
         <div class="cfg-f full"><div class="cfg-lbl">Skip Count</div><input class="cfg-in" id="c-skip" value="3"></div>
       </div>
 
-      <div class="dsec-title">Buy Settings</div>
+      <div class="dsec-title">Buy Amount</div>
       <div class="cfg-grid">
-        <div class="cfg-f"><div class="cfg-lbl">Buy Amount Mode</div>
+        <div class="cfg-f"><div class="cfg-lbl">Buy Unit</div>
           <select class="cfg-in" id="c-buymode" onchange="onBuyModeChange()">
             <option value="USD">USD</option>
             <option value="SOL">SOL</option>
@@ -1081,12 +1073,9 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div class="cfg-f"></div>
         <div class="cfg-f" id="f-buyusd"><div class="cfg-lbl">Buy Amount (USD)</div><input class="cfg-in" id="c-buyusd" value="1"></div>
         <div class="cfg-f" id="f-buysol"><div class="cfg-lbl">Buy Amount (SOL)</div><input class="cfg-in" id="c-buy" value="0.01"></div>
-        <div class="cfg-f"><div class="cfg-lbl">Slippage (BPS)</div><input class="cfg-in" id="c-slip" value="1000"></div>
-        <div class="cfg-f"><div class="cfg-lbl">Priority Fee (SOL)</div><input class="cfg-in" id="c-priofee" value="0.0005"></div>
-        <div class="cfg-f full"><div class="cfg-lbl">Min Liquidity (SOL)</div><input class="cfg-in" id="c-liq" value="0.001"></div>
       </div>
 
-      <div class="dsec-title">Exit Strategy</div>
+      <div class="dsec-title">Hold Time</div>
       <div class="cfg-grid">
         <div class="cfg-f full"><div class="cfg-lbl" data-tip="BUY then wait exactly this long, then SELL — profit/loss is ignored entirely">Hold Time (seconds)</div><input class="cfg-in" id="c-hold-sec" value="30" oninput="document.getElementById('c-hold').value=Math.round((parseFloat(this.value)||0)*1000)"></div>
       </div>
@@ -1107,17 +1096,17 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div class="mini-bar"><i id="sh-load-bar" style="width:12%;background:linear-gradient(90deg,var(--green),var(--cyan))"></i></div>
       </div>
 
-      <div class="dsec-title">Endpoints</div>
+      <div class="dsec-title">RPC Fallback</div>
       <div class="cfg-grid">
         <div class="cfg-f full"><div class="cfg-lbl" data-tip="Fallback only — wallet balance is normally fetched via the backend's own RPC connection for reliability">RPC Endpoint (fallback)</div><input class="cfg-in" id="c-rpc" value="https://api.mainnet-beta.solana.com"></div>
       </div>
 
       <div class="dsec-title">Quick Links</div>
       <div class="qlinks">
-        <a class="ql" href="https://memebot-asp9.onrender.com/health" target="_blank">Health</a>
-        <a class="ql" href="https://memebot-asp9.onrender.com/api/trades" target="_blank">Trades</a>
-        <a class="ql" href="https://memebot-asp9.onrender.com/api/stats" target="_blank">Stats</a>
-        <a class="ql" href="https://memebot-asp9.onrender.com/api/tokens" target="_blank">Tokens</a>
+        <a class="ql" href="https://memebot-4.onrender.com/health" target="_blank">Health</a>
+        <a class="ql" href="https://memebot-4.onrender.com/api/trades" target="_blank">Trades</a>
+        <a class="ql" href="https://memebot-4.onrender.com/api/stats" target="_blank">Stats</a>
+        <a class="ql" href="https://memebot-4.onrender.com/api/tokens" target="_blank">Tokens</a>
       </div>
 
       <div class="dsec-title">Data</div>
@@ -1141,25 +1130,13 @@ select.cfg-in{color:var(--text);cursor:pointer}
    endpoints) are preserved so the existing backend keeps working
    unmodified.
    ============================================================ */
-const B='https://memebot-asp9.onrender.com';
-let botActive=false; // always starts STOPPED — only Start Bot button can change this
-let tradeMax=100;
+const B='https://memebot-4.onrender.com';
+let tCount=0,wins=0,losses=0,pnl=0,feedN=0,tradeMax=100,botActive=true;
+let buyTimes=[],sellTimes=[],detectTimes=[];
 let dailyLimitReached=false;
 let walletSolBalance=null;
 let isLiveMode=false;
 let openPositionsCount=0;
-
-// ── Per-mode stats ────────────────────────────────────────────────────────────
-// Paper and Live keep completely separate counters so switching modes never
-// bleeds one mode's wins/losses/PnL into the other's display.
-const modeStats = {
-  paper: { wins: 0, losses: 0, pnl: 0, feedN: 0 },
-  live:  { wins: 0, losses: 0, pnl: 0, feedN: 0 },
-};
-function currentStats() { return isLiveMode ? modeStats.live : modeStats.paper; }
-
-let buyTimes=[],sellTimes=[],detectTimes=[];
-
 
 /* ============================================================
    TOAST NOTIFICATIONS
@@ -1512,8 +1489,7 @@ function renderConnectedWalletPanel(){
 
   if (!activeAccount){
     body.innerHTML =
-      '<div class="empty"><span class="empty-icon">👛</span>Connect a wallet to authenticate dashboard controls</div>'+
-      '<button class="wc-connect-cta" onclick="openWalletModal()">+ Connect Wallet</button>';
+      '<div class="empty"><span class="empty-icon">👛</span>Not connected — use the <b>Connect Wallet</b> button above</div>';
     if (statusBadge){ statusBadge.className='status-badge sb-idle'; statusBadge.innerHTML='<span class="sdot"></span>Not Connected'; }
     return;
   }
@@ -1544,6 +1520,18 @@ function requireWalletOrPrompt(actionLabel){
   if (authToken) return true;
   logLine('warn','Connect a wallet to '+actionLabel,'Wallet');
   openWalletModal();
+  return false;
+}
+
+/* Used ONLY by Settings-drawer actions (Save Configuration, mode switch).
+   Deliberately does NOT open the connect modal — wallet connection must only
+   ever happen via the single main "Connect Wallet" button. This just tells
+   the user to use it, rather than a Settings action silently launching a
+   second connection flow. */
+function requireWalletSilent(actionLabel){
+  if (authToken) return true;
+  logLine('warn','Use the Connect Wallet button to '+actionLabel,'Wallet');
+  showToast('warning','Wallet Required','Use the Connect Wallet button (top bar) to '+actionLabel);
   return false;
 }
 
@@ -1650,7 +1638,6 @@ function setBotStatusBadge(state){
 }
 
 let engineState='stopped';
-let _engineStateInitialized=false; // suppress notifications on first page-load call
 function setEngineState(state){
   var prevState = engineState;
   engineState=state;
@@ -1659,13 +1646,6 @@ function setEngineState(state){
   set('tk-status',state==='limit_reached'?'DAILY LIMIT REACHED':state.toUpperCase());
 
   updateControlVisibility(state);
-
-  // Only fire notifications after the first real state change — never on the
-  // initial page-load 'stopped' assignment which would replay stale events.
-  if (!_engineStateInitialized){
-    _engineStateInitialized=true;
-    return;
-  }
 
   if (prevState !== state){
     if(state==='running') showToast('success','Bot Started',isLiveMode?'Live Trading is now active':'Paper Trading is now active');
@@ -1676,7 +1656,6 @@ function setEngineState(state){
     }
   }
 }
-
 
 /* Bot control visibility (spec addendum): Stopped -> [Start, Emergency if positions open];
    Running -> [Stop, Emergency]. Never Start+Stop together. */
@@ -1741,7 +1720,6 @@ function startBot(){
     }
   });
 }
-function pauseBot(){ logLine('warn','Pause is not available — use Stop Bot to halt new trades','Trades'); }
 function stopBot(){
   if(isLiveMode&&!requireWalletOrPrompt('stop the bot'))return;
   var hadOpenPositions=openPositionsCount>0;
@@ -1814,8 +1792,7 @@ function logLine(kind,text,category){
 }
 
 function addToken(t, silent){
-  var el=document.getElementById('tok-count');
-  var tCount=(parseInt(el&&el.textContent)||0)+1;
+  tCount++;
   set('tok-count',tCount);set('tk-det',tCount);
   var list=document.getElementById('tok-list');
   var emp=list.querySelector('.empty');if(emp)emp.remove();
@@ -1876,11 +1853,8 @@ function addTrade(t, silent){
   var p=t.pnl_pct!=null?t.pnl_pct:t.pnlPct!=null?t.pnlPct:null;
   var sig=t.tx_sig||t.txSig||null;
   var mint=t.mint||'';
-  // Determine which mode this trade belongs to (use trade data, not current UI state)
-  var tradeMode=t.mode||(isLiveMode?'live':'paper');
 
   if(t.type==='BUY'){
-
     if(!silent){
       logLine('ok','Buy Executed for <b>'+mint.slice(0,6)+'…'+mint.slice(-4)+'</b>','Trades');
       pushNotif('var(--green)','<b>Buy executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4));
@@ -1890,29 +1864,24 @@ function addTrade(t, silent){
   }
 
   if(t.type==='SELL'&&p!==null){
-    // Only update stats for live data, never for historical hydration.
+    if(p>=0)wins++;else losses++;
+    pnl+=p;
+    var tot=wins+losses;
+    var wr=tot>0?Math.round(wins/tot*100):0;
+    set('s-wins',wins);set('s-loss',losses);
+    set('s-wr',wins+'W / '+losses+'L');set('tk-wr',wr+'%');
+    var wrEl=document.getElementById('s-wr-val');
+    if(wrEl)wrEl.textContent=wr+'%';
+    var pstr=(pnl>=0?'+':'')+pnl.toFixed(1)+'%';
+    var pe=document.getElementById('s-pnl');
+    pe.textContent=pstr;pe.style.color=pnl>=0?'var(--green)':'var(--danger)';
+    var tp=document.getElementById('tk-pnl');
+    tp.textContent=pstr;tp.className='ticker-val '+(pnl>=0?'up':'dn');
+    feedN++;
+    set('s-tr',feedN);set('feed-count',feedN);
+    var used=wins+losses;
+    set('tk-tr',used);
     if(!silent){
-
-      var stats = (tradeMode==='live') ? modeStats.live : modeStats.paper;
-      if(p>=0)stats.wins++;else stats.losses++;
-      stats.pnl+=p;
-      stats.feedN++;
-      // Only render stats for the currently active mode
-      var ds = currentStats();
-      var tot=ds.wins+ds.losses;
-      var wr=tot>0?Math.round(ds.wins/tot*100):0;
-      set('s-wins',ds.wins);set('s-loss',ds.losses);
-      set('s-wr',ds.wins+'W / '+ds.losses+'L');set('tk-wr',wr+'%');
-      var wrEl=document.getElementById('s-wr-val');
-      if(wrEl)wrEl.textContent=wr+'%';
-      var pstr=(ds.pnl>=0?'+':'')+ds.pnl.toFixed(1)+'%';
-      var pe=document.getElementById('s-pnl');
-      pe.textContent=pstr;pe.style.color=ds.pnl>=0?'var(--green)':'var(--danger)';
-      var tp=document.getElementById('tk-pnl');
-      tp.textContent=pstr;tp.className='ticker-val '+(ds.pnl>=0?'up':'dn');
-      set('s-tr',ds.feedN);set('feed-count',ds.feedN);
-      set('tk-tr',ds.wins+ds.losses);
-
       logLine(p>=0?'ok':'warn','Sell Executed '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr,'Trades');
       pushNotif(p>=0?'var(--green)':'var(--danger)','<b>Sell executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
       showToast(p>=0?'success':'warning','Trade Sold',mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
@@ -1932,13 +1901,11 @@ function addTrade(t, silent){
   var rows=list.querySelectorAll('.trade-item');
   if(rows.length>50)rows[rows.length-1].remove();
 
-  // Only add to history for live (real-time) events, not historical hydration,
-  // to prevent old trades from polluting current-session trade history display.
-  if(!silent) addHistoryRow(t,sig,tradeMode);
+  addHistoryRow(t,sig);
 }
 
 let historyRows=[];
-function addHistoryRow(t,sig,tradeMode){
+function addHistoryRow(t,sig){
   var now=Date.now();
   var row={
     time:now,
@@ -1949,11 +1916,10 @@ function addHistoryRow(t,sig,tradeMode){
     exit:t.exitPrice!=null?Number(t.exitPrice):(t.exit_price!=null?Number(t.exit_price):(t.type==='SELL'&&t.price!=null?Number(t.price):null)),
     profitPct:t.pnl_pct!=null?Number(t.pnl_pct):(t.pnlPct!=null?Number(t.pnlPct):null),
     durationSec:t.type==='SELL'?lookupDuration(t.mint,now):null,
-    mode:tradeMode||t.mode||(isLiveMode?'live':'paper'),
+    mode:t.mode||(isLiveMode?'live':'paper'),
     hash:sig||null,
     status:t.status||(sig?'confirmed':'pending')
   };
-
   historyRows.unshift(row);
   if(historyRows.length>200)historyRows.pop();
   renderHistory();
@@ -2143,7 +2109,7 @@ function fetchStats(){
     // /api/portfolio is backed by positionManager, which tracks open positions
     // from BOTH paper and live trades uniformly — the correct universal source
     // for "what's actually open right now," unlike /api/stats.
-    fetch(B+'/api/portfolio').then(function(r){return r.json();}).then(function(pf){
+    fetch(B+'/api/portfolio?mode=live').then(function(r){return r.json();}).then(function(pf){
       renderPositionList((pf&&pf.openPositions)||[]);
     }).catch(function(){});
   }
@@ -2201,13 +2167,7 @@ function loadSettings(){
       'c-skip': s.skipCount,
       'c-buyusd': s.buyAmountUSD,
       'c-buy': cfg.BUY_AMOUNT_SOL,
-      'c-slip': cfg.SLIPPAGE_BPS,
-      'c-priofee': cfg.PRIORITY_FEE_LAMPORTS!=null?(cfg.PRIORITY_FEE_LAMPORTS/1e9):null,
-      'c-liq': cfg.MIN_LIQUIDITY_SOL,
-      'c-hold': cfg.HOLD_TIME_MS,
-      'c-mom': cfg.HOLD_TIME_MOMENTUM_MS,
-      'c-tpmin': cfg.TAKE_PROFIT_MIN,
-      'c-tpmax': cfg.TAKE_PROFIT_MAX
+      'c-hold': cfg.HOLD_TIME_MS
     };
     Object.keys(map).forEach(function(id){
       if(map[id]!=null){var el=document.getElementById(id);if(el)el.value=map[id];}
@@ -2220,8 +2180,6 @@ function loadSettings(){
       var modeEl=document.getElementById('c-buymode');
       if(modeEl){modeEl.value=cfg.buyAmountMode;onBuyModeChange();}
     }
-    var ar=document.getElementById('opt-autoresume');
-    if(ar && cfg.autoResumeNextDay!=null) ar.checked=!!cfg.autoResumeNextDay;
 
     if (s.buyAmountUSD!=null) applyBuyAmount({buyAmountUsd:s.buyAmountUSD, buyAmountSol:cfg.BUY_AMOUNT_SOL});
     if (s.skipCount!=null) applySkipStrategy({skipCount:s.skipCount, currentCounter:s.currentSkipCounter});
@@ -2234,6 +2192,9 @@ function loadSettings(){
   });
 }
 
+/* Only genuine local-only setting left is the RPC fallback endpoint — every
+   other field the backend doesn't support was removed from Settings entirely
+   rather than kept as dead, silently-ignored inputs. */
 function saveLocalOnlySettings(){
   var data={
     rpcEndpoint:document.getElementById('c-rpc').value
@@ -2248,7 +2209,6 @@ function restoreLocalOnlySettings(){
     if(data.rpcEndpoint!=null)document.getElementById('c-rpc').value=data.rpcEndpoint;
   }catch(e){}
 }
-
 
 function onBuyModeChange(){
   var mode = document.getElementById('c-buymode').value;
@@ -2275,12 +2235,6 @@ refreshSolUsdPrice();
 setInterval(refreshSolUsdPrice,30000);
 setInterval(function(){ if(activeAccount) refreshWalletBalance(); },15000);
 
-function toggleBot(){
-  if(!requireWalletOrPrompt('toggle the bot'))return;
-  authFetch(B+'/api/bot/toggle',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
-    updateBtn(d.status==='running');
-  }).catch(function(){});
-}
 function updateBtn(active){
   botActive=active;
   setEngineState(active?'running':'stopped');
@@ -2311,20 +2265,6 @@ function setMode(isPaper,skipPost){
   if(wsBalRow)wsBalRow.style.display=isPaper?'':'none';
   updateLiveWarningBanner();
   checkLiveStartEligibility();
-
-  // Refresh stats display for the new mode so counters immediately reflect
-  // this mode's own history, not the previous mode's.
-  var ds=currentStats();
-  var tot=ds.wins+ds.losses;
-  var wr=tot>0?Math.round(ds.wins/tot*100):0;
-  set('s-wins',ds.wins);set('s-loss',ds.losses);
-  set('s-wr',ds.wins+'W / '+ds.losses+'L');set('tk-wr',wr+'%');
-  var wrEl=document.getElementById('s-wr-val');if(wrEl)wrEl.textContent=(tot>0?wr+'%':'—');
-  var pstr=(ds.pnl>=0?'+':'')+ds.pnl.toFixed(1)+'%';
-  var pe=document.getElementById('s-pnl');
-  if(pe){pe.textContent=pstr;pe.style.color=ds.pnl>=0?'var(--green)':'var(--danger)';}
-  set('s-tr',ds.feedN);set('feed-count',ds.feedN);set('tk-tr',ds.wins+ds.losses);
-
   /* Immediately refresh whichever balance source is now authoritative for this
      mode — never leave the previous mode's stale value showing. */
   if(isPaper){
@@ -2334,24 +2274,19 @@ function setMode(isPaper,skipPost){
     if(activeAccount) refreshWalletBalance(); else updatePrimaryBalanceDisplay(false);
   }
   if(!skipPost){
-    // Mode switch does NOT require wallet auth — it is a UI preference.
-    // The backend setting (paperTrading) is updated if a token is available,
-    // but failure doesn't block the UI change.
-    var settingsBody=JSON.stringify({paperTrading:isPaper});
-    var req=authToken
-      ? authFetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:settingsBody})
-      : fetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:settingsBody});
-    req.then(function(r){return r.json();})
+    if(!requireWalletSilent('change trading mode')){ return; }
+    authFetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({paperTrading:isPaper})})
+      .then(function(r){return r.json();})
       .then(function(){ checkLiveStartEligibility(); })
-      .catch(function(){ /* mode switch still applied in UI, backend update failed silently */ });
+      .catch(function(){ logLine('err','Failed to switch trading mode','Errors'); showToast('error','Failed to Switch Mode',''); });
     logLine('info','Switched to '+(isPaper?'🟣 Paper':'🟢 Live')+' Trading','Wallet');
     showToast('info','Trading Mode Changed',isPaper?'🟣 Paper Trading':'🟢 Live Trading');
   }
 }
 
-
 function saveConfig(){
-  if(!requireWalletOrPrompt('save settings'))return;
+  if(!requireWalletSilent('save settings'))return;
   var btn=document.getElementById('save-btn');
   btn.disabled=true; btn.textContent='Saving Settings...';
   var payload={
@@ -2359,11 +2294,7 @@ function saveConfig(){
     buyAmountUSD:document.getElementById('c-buyusd').value,
     buyAmountMode:document.getElementById('c-buymode').value,
     BUY_AMOUNT_SOL:document.getElementById('c-buy').value,
-    SLIPPAGE_BPS:document.getElementById('c-slip').value,
-    PRIORITY_FEE_LAMPORTS:Math.round((parseFloat(document.getElementById('c-priofee').value)||0)*1e9),
-    MIN_LIQUIDITY_SOL:document.getElementById('c-liq').value,
-    HOLD_TIME_MS:document.getElementById('c-hold').value,
-    autoResumeNextDay:document.getElementById('opt-autoresume').checked
+    HOLD_TIME_MS:document.getElementById('c-hold').value
   };
   saveLocalOnlySettings();
 
@@ -2434,18 +2365,13 @@ function resetSettings(){
   document.getElementById('c-buymode').value='USD';
   document.getElementById('c-buyusd').value='1';
   document.getElementById('c-buy').value='0.01';
-  document.getElementById('c-slip').value='1000';
-  document.getElementById('c-liq').value='0.001';
   document.getElementById('c-hold').value='30000';
   document.getElementById('c-hold-sec').value='30';
-  document.getElementById('c-priofee').value='0.0005';
   document.getElementById('c-rpc').value='https://api.mainnet-beta.solana.com';
-  document.getElementById('opt-autoresume').checked=true;
   onBuyModeChange();
   applySkipStrategy({skipCount:3,currentCounter:0});
   logLine('warn','Settings reset to defaults (not yet saved — click Save Configuration to apply)');
 }
-
 
 function checkLiveStartEligibility(){
   var startBtn=document.getElementById('start-btn');
