@@ -1335,6 +1335,20 @@ function onWalletConnected(){
   pushNotif('var(--green)','<b>Wallet connected</b> — '+activeWallet.name+' ('+shortAddr(activeAccount.address)+')');
   showToast('success','Wallet Connected',activeWallet.name+' · '+shortAddr(activeAccount.address));
   refreshWalletBalance();
+
+  // Show Live stats once a wallet is connected, not stale Paper stats — but
+  // only switch the actual trading mode when it's safe to (bot not running).
+  // CONFIG.paperTrading is read live on every buy, so flipping it while the
+  // bot is already running Paper Trading could make it start placing real
+  // trades mid-session, which is a very different thing from a display switch.
+  if(!isLiveMode){
+    if(engineState==='running'){
+      logLine('warn','Wallet connected while Paper Trading is running — Stop Bot first to switch to Live Trading','Wallet');
+      showToast('warning','Stop Bot to Switch','Paper Trading is running — Stop Bot first to switch to Live Trading');
+    } else {
+      setMode(false);
+    }
+  }
 }
 
 function disconnectWallet(){
@@ -1706,18 +1720,22 @@ function startBot(){
   setEngineState('starting');
   showToast('info','Starting Bot...','');
   var req=authToken?authFetch(B+'/bot/start',{method:'POST'}):fetch(B+'/bot/start',{method:'POST'});
-  req.then(function(r){return r.json();}).then(function(d){
-    setEngineState((d&&d.state)||'running');
+  req.then(function(r){
+    return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok, data:d}; });
+  }).then(function(res){
+    if(!res.ok){
+      setEngineState(prev);
+      var msg=res.data&&res.data.error?res.data.error:'Failed to start bot';
+      logLine('err',msg,'Errors');
+      showToast('error','Failed to Start Bot',msg);
+      return;
+    }
+    setEngineState((res.data&&res.data.state)||'running');
     logLine('ok',isLiveMode?'🟢 Live Trading started — real SOL transactions active':'🟣 Paper Trading started — virtual funds only','Trades');
   }).catch(function(){
-    if(!isLiveMode){
-      setEngineState('running');
-      logLine('ok','🟣 Paper Trading started (simulated)','Trades');
-    } else {
-      setEngineState(prev);
-      logLine('err','Failed to start bot','Errors');
-      showToast('error','Failed to Start Bot','');
-    }
+    setEngineState(prev);
+    logLine('err','Failed to start bot — could not reach backend','Errors');
+    showToast('error','Failed to Start Bot','Could not reach backend');
   });
 }
 function stopBot(){
@@ -1727,8 +1745,17 @@ function stopBot(){
   setEngineState('stopping');
   showToast('info','Stopping Bot...','');
   var req=authToken?authFetch(B+'/bot/stop',{method:'POST'}):fetch(B+'/bot/stop',{method:'POST'});
-  req.then(function(r){return r.json();}).then(function(d){
-    setEngineState((d&&d.state)||'stopped');
+  req.then(function(r){
+    return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok, data:d}; });
+  }).then(function(res){
+    if(!res.ok){
+      setEngineState(prev);
+      var msg=res.data&&res.data.error?res.data.error:'Failed to stop bot';
+      logLine('err',msg,'Errors');
+      showToast('error','Failed to Stop Bot',msg);
+      return;
+    }
+    setEngineState((res.data&&res.data.state)||'stopped');
     logLine('warn','Bot stopped — scanning, buying and automatic selling all halted','Trades');
     if(hadOpenPositions){
       logLine('warn',openPositionsCount+' open position(s) are now unmonitored — they will NOT auto-sell until Start Bot is pressed again. Use Emergency Sell to close them now if needed.','Trades');
@@ -1736,14 +1763,14 @@ function stopBot(){
     }
   }).catch(function(){
     setEngineState(prev);
-    logLine('err','Failed to stop bot','Errors');
-    showToast('error','Failed to Stop Bot','');
+    logLine('err','Failed to stop bot — could not reach backend','Errors');
+    showToast('error','Failed to Stop Bot','Could not reach backend');
   });
 }
 
 /* Two-step Emergency Sell confirmation (spec addendum) */
 function requestEmergencySell(){
-  if(!requireWalletOrPrompt('trigger an emergency sell'))return;
+  if(isLiveMode&&!requireWalletOrPrompt('trigger an emergency sell'))return;
   document.getElementById('emergency-confirm-overlay').classList.add('open');
 }
 function closeEmergencyConfirm(){
@@ -1754,10 +1781,20 @@ function confirmEmergencySell(){
   btn.disabled=true; btn.textContent='Selling...';
   var prev=engineState;
   setEngineState('stopping');
-  authFetch(B+'/bot/emergency-sell',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
-    setEngineState((d&&d.state)||'stopped');
+  var req=authToken?authFetch(B+'/bot/emergency-sell',{method:'POST'}):fetch(B+'/bot/emergency-sell',{method:'POST'});
+  req.then(function(r){
+    return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok, data:d}; });
+  }).then(function(res){
     closeEmergencyConfirm();
     btn.disabled=false; btn.textContent='Confirm Emergency Sell';
+    if(!res.ok){
+      setEngineState(prev);
+      var msg=res.data&&res.data.error?res.data.error:'Emergency Sell request failed';
+      logLine('err',msg,'Errors');
+      showToast('error','Emergency Sell Failed',msg);
+      return;
+    }
+    setEngineState((res.data&&res.data.state)||'stopped');
     logLine('err','Emergency Sell triggered — all open positions liquidated, bot stopped','Trades');
     pushNotif('var(--danger)','<b>Emergency Sell triggered</b> — all positions liquidated');
     showToast('success','Emergency Sell Completed','All positions have been closed.');
@@ -1766,8 +1803,8 @@ function confirmEmergencySell(){
     setEngineState(prev);
     closeEmergencyConfirm();
     btn.disabled=false; btn.textContent='Confirm Emergency Sell';
-    logLine('err','Emergency Sell request failed','Errors');
-    showToast('error','Emergency Sell Failed','Please try again');
+    logLine('err','Emergency Sell request failed — could not reach backend','Errors');
+    showToast('error','Emergency Sell Failed','Could not reach backend');
   });
 }
 /* legacy name kept in case anything still calls it directly */
@@ -2180,6 +2217,12 @@ function loadSettings(){
       var modeEl=document.getElementById('c-buymode');
       if(modeEl){modeEl.value=cfg.buyAmountMode;onBuyModeChange();}
     }
+
+    // Sync the displayed mode from what the backend ACTUALLY has persisted —
+    // this was the real root cause of "Start Bot" 401ing while the UI showed
+    // Paper Trading: the display never checked the backend's real state, it
+    // just hardcoded Paper on every page load regardless of reality.
+    if(cfg.paperTrading!=null) setMode(cfg.paperTrading!==false, true);
 
     if (s.buyAmountUSD!=null) applyBuyAmount({buyAmountUsd:s.buyAmountUSD, buyAmountSol:cfg.BUY_AMOUNT_SOL});
     if (s.skipCount!=null) applySkipStrategy({skipCount:s.skipCount, currentCounter:s.currentSkipCounter});
