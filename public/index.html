@@ -970,7 +970,7 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div class="panel-head">
           <div class="panel-title"><div class="p-icon pi-green">👛</div><span id="ws-panel-title">Paper Wallet</span></div>
         </div>
-        <div class="info-row"><span class="info-k" id="ws-bal-label">Paper balance</span><span class="info-v g" id="ws-bal">—</span></div>
+        <div class="info-row" id="ws-balance-row"><span class="info-k" id="ws-bal-label">Paper balance</span><span class="info-v g" id="ws-bal">—</span></div>
         <div class="info-row"><span class="info-k">Open positions</span><span class="info-v" id="s-open">0</span></div>
         <div class="info-row"><span class="info-k">Wins</span><span class="info-v g" id="s-wins">0</span></div>
         <div class="info-row"><span class="info-k">Losses</span><span class="info-v r" id="s-loss">0</span></div>
@@ -1056,14 +1056,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
 
       <div class="dsec-title">Behavior</div>
       <div class="toggle-row">
-        <div><div class="toggle-lbl">Auto start</div><div class="toggle-sub">Resume sniping automatically on launch</div></div>
-        <label class="switch"><input type="checkbox" id="opt-autostart" checked><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <div><div class="toggle-lbl">Notifications</div><div class="toggle-sub">Desktop alerts for fills and errors</div></div>
-        <label class="switch"><input type="checkbox" id="opt-notif" checked><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
         <div><div class="toggle-lbl">Auto Resume Next Day</div><div class="toggle-sub">Automatically resume trading when the daily limit resets</div></div>
         <label class="switch"><input type="checkbox" id="opt-autoresume" checked><span class="slider"></span></label>
       </div>
@@ -1075,8 +1067,7 @@ select.cfg-in{color:var(--text);cursor:pointer}
       </div>
       <div class="dsec-title">Skip &amp; Buy Strategy</div>
       <div class="cfg-grid">
-        <div class="cfg-f"><div class="cfg-lbl">Skip Count</div><input class="cfg-in" id="c-skip" value="3"></div>
-        <div class="cfg-f"><div class="cfg-lbl" data-tip="Backend currently supports skip-N-then-buy-1 only — this field is stored locally for now">Buy Count</div><input class="cfg-in" id="c-buycount" value="1"></div>
+        <div class="cfg-f full"><div class="cfg-lbl">Skip Count</div><input class="cfg-in" id="c-skip" value="3"></div>
       </div>
 
       <div class="dsec-title">Buy Settings</div>
@@ -1092,8 +1083,7 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <div class="cfg-f" id="f-buysol"><div class="cfg-lbl">Buy Amount (SOL)</div><input class="cfg-in" id="c-buy" value="0.01"></div>
         <div class="cfg-f"><div class="cfg-lbl">Slippage (BPS)</div><input class="cfg-in" id="c-slip" value="1000"></div>
         <div class="cfg-f"><div class="cfg-lbl">Priority Fee (SOL)</div><input class="cfg-in" id="c-priofee" value="0.0005"></div>
-        <div class="cfg-f"><div class="cfg-lbl" data-tip="Requires Jito Block Engine integration — not yet implemented on the backend, stored locally">Jito Tip (SOL)</div><input class="cfg-in" id="c-jito" value="0.0002"></div>
-        <div class="cfg-f"><div class="cfg-lbl">Min Liquidity</div><input class="cfg-in" id="c-liq" value="0.001"></div>
+        <div class="cfg-f full"><div class="cfg-lbl">Min Liquidity (SOL)</div><input class="cfg-in" id="c-liq" value="0.001"></div>
       </div>
 
       <div class="dsec-title">Exit Strategy</div>
@@ -1102,10 +1092,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
       </div>
       <div style="font-size:10.5px;color:var(--text3);line-height:1.6;padding:2px 2px 4px">Always sells after the configured Hold Time, regardless of price movement.</div>
       <input type="hidden" id="c-hold" value="30000">
-      <input type="hidden" id="c-mom" value="45000">
-      <input type="hidden" id="c-tpmin" value="10">
-      <input type="hidden" id="c-tpmax" value="100">
-      <input type="hidden" id="c-sl" value="15">
     </div>
 
     <div class="dgroup" data-group="advanced">
@@ -1123,8 +1109,7 @@ select.cfg-in{color:var(--text);cursor:pointer}
 
       <div class="dsec-title">Endpoints</div>
       <div class="cfg-grid">
-        <div class="cfg-f full"><div class="cfg-lbl" data-tip="Used live to fetch your connected wallet's SOL balance client-side">RPC Endpoint</div><input class="cfg-in" id="c-rpc" value="https://api.mainnet-beta.solana.com"></div>
-        <div class="cfg-f full"><div class="cfg-lbl" data-tip="Informational only — the live socket connection is fixed to the deployed backend">WebSocket Endpoint</div><input class="cfg-in" id="c-ws" value="wss://memebot-4.onrender.com"></div>
+        <div class="cfg-f full"><div class="cfg-lbl" data-tip="Fallback only — wallet balance is normally fetched via the backend's own RPC connection for reliability">RPC Endpoint (fallback)</div><input class="cfg-in" id="c-rpc" value="https://api.mainnet-beta.solana.com"></div>
       </div>
 
       <div class="dsec-title">Quick Links</div>
@@ -1133,20 +1118,6 @@ select.cfg-in{color:var(--text);cursor:pointer}
         <a class="ql" href="https://memebot-4.onrender.com/api/trades" target="_blank">Trades</a>
         <a class="ql" href="https://memebot-4.onrender.com/api/stats" target="_blank">Stats</a>
         <a class="ql" href="https://memebot-4.onrender.com/api/tokens" target="_blank">Tokens</a>
-      </div>
-
-      <div class="dsec-title">Diagnostics</div>
-      <div class="toggle-row">
-        <div><div class="toggle-lbl">Simulation mode</div><div class="toggle-sub">Dry-run trades against a local simulator</div></div>
-        <label class="switch"><input type="checkbox" id="opt-sim"><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <div><div class="toggle-lbl">Developer mode</div><div class="toggle-sub">Expose raw event payloads in console</div></div>
-        <label class="switch"><input type="checkbox" id="opt-dev"><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <div><div class="toggle-lbl">Debug logs</div><div class="toggle-sub">Verbose logging in Recent Activity</div></div>
-        <label class="switch"><input type="checkbox" id="opt-debug"><span class="slider"></span></label>
       </div>
 
       <div class="dsec-title">Data</div>
@@ -1171,12 +1142,24 @@ select.cfg-in{color:var(--text);cursor:pointer}
    unmodified.
    ============================================================ */
 const B='https://memebot-4.onrender.com';
-let tCount=0,wins=0,losses=0,pnl=0,feedN=0,tradeMax=100,botActive=true;
-let buyTimes=[],sellTimes=[],detectTimes=[];
+let botActive=false; // always starts STOPPED — only Start Bot button can change this
+let tradeMax=100;
 let dailyLimitReached=false;
 let walletSolBalance=null;
 let isLiveMode=false;
 let openPositionsCount=0;
+
+// ── Per-mode stats ────────────────────────────────────────────────────────────
+// Paper and Live keep completely separate counters so switching modes never
+// bleeds one mode's wins/losses/PnL into the other's display.
+const modeStats = {
+  paper: { wins: 0, losses: 0, pnl: 0, feedN: 0 },
+  live:  { wins: 0, losses: 0, pnl: 0, feedN: 0 },
+};
+function currentStats() { return isLiveMode ? modeStats.live : modeStats.paper; }
+
+let buyTimes=[],sellTimes=[],detectTimes=[];
+
 
 /* ============================================================
    TOAST NOTIFICATIONS
@@ -1398,10 +1381,15 @@ function disconnectWallet(){
     pushNotif('var(--warning)','Wallet disconnected — '+wasWallet.name);
     showToast('warning','Wallet Disconnected',wasWallet.name);
   }
+  // NOTE: the bot's running/stopped state is NEVER changed automatically by a
+  // wallet disconnect — only Start Bot / Stop Bot / Emergency Sell (all
+  // explicit user clicks) may change it. If Live Trading is still running
+  // with no wallet connected, this is informational only: you will need a
+  // wallet reconnected to authorize your next Stop/Emergency Sell click, but
+  // the bot itself keeps doing exactly what it was doing.
   if(wasLive && wasRunning){
-    setEngineState('stopped');
-    logLine('err','Live Trading stopped — wallet disconnected. Existing positions are still managed by the backend.','Wallet');
-    pushNotif('var(--danger)','<b>Wallet disconnected</b> — new trades stopped');
+    logLine('warn','Wallet disconnected while Live Trading is running — the bot keeps running exactly as before. Reconnect a wallet to Stop Bot or Emergency Sell.','Wallet');
+    showToast('warning','Wallet Disconnected','Live Trading is still running — reconnect a wallet to Stop Bot or Emergency Sell');
   }
 }
 
@@ -1457,6 +1445,34 @@ function updatePrimaryBalanceDisplay(loading){
   set('ws-bal', solStr);
 }
 
+async function fetchWalletSolBalance(address){
+  // Primary: ask our own backend, which uses its own already-working RPC
+  // connection server-side. This is the actual fix for wallets showing $0.00
+  // despite having funds — direct browser calls to the public RPC
+  // (api.mainnet-beta.solana.com) are commonly blocked or rate-limited for
+  // POST requests from a browser (no permissive CORS), so that fetch was
+  // silently failing and falling back to zero every time.
+  try {
+    var r = await fetch(B+'/api/wallet/lookup/'+address);
+    if (r.ok){
+      var d = await r.json();
+      if (d && d.solBalance != null) return d.solBalance;
+    }
+  } catch(e){ /* fall through to direct RPC below */ }
+
+  // Fallback only: direct RPC call, in case the backend itself is unreachable.
+  try {
+    var rpcInput = document.getElementById('c-rpc');
+    var rpcUrl = (rpcInput && rpcInput.value) || 'https://api.mainnet-beta.solana.com';
+    var res = await fetch(rpcUrl, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[address]})});
+    var data = await res.json();
+    var lamports = data && data.result && data.result.value != null ? data.result.value : null;
+    return lamports != null ? (lamports/1e9) : null;
+  } catch(e){
+    return null;
+  }
+}
+
 async function refreshWalletBalance(){
   if (!activeAccount) return;
   var balEl0 = document.getElementById('wallet-btn-balance');
@@ -1465,12 +1481,7 @@ async function refreshWalletBalance(){
   if(wcBalEl) wcBalEl.textContent='Loading Balance...';
   updatePrimaryBalanceDisplay(true);
   try {
-    var rpcInput = document.getElementById('c-rpc');
-    var rpcUrl = (rpcInput && rpcInput.value) || 'https://api.mainnet-beta.solana.com';
-    var res = await fetch(rpcUrl, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[activeAccount.address]})});
-    var data = await res.json();
-    var lamports = data && data.result && data.result.value != null ? data.result.value : null;
-    var bal = lamports != null ? (lamports/1e9) : null;
+    var bal = await fetchWalletSolBalance(activeAccount.address);
     var wasZeroOrLow = (walletSolBalance!=null && walletSolBalance<0.005);
     walletSolBalance = bal;
     updateWalletTopbarButton();
@@ -1639,6 +1650,7 @@ function setBotStatusBadge(state){
 }
 
 let engineState='stopped';
+let _engineStateInitialized=false; // suppress notifications on first page-load call
 function setEngineState(state){
   var prevState = engineState;
   engineState=state;
@@ -1647,6 +1659,13 @@ function setEngineState(state){
   set('tk-status',state==='limit_reached'?'DAILY LIMIT REACHED':state.toUpperCase());
 
   updateControlVisibility(state);
+
+  // Only fire notifications after the first real state change — never on the
+  // initial page-load 'stopped' assignment which would replay stale events.
+  if (!_engineStateInitialized){
+    _engineStateInitialized=true;
+    return;
+  }
 
   if (prevState !== state){
     if(state==='running') showToast('success','Bot Started',isLiveMode?'Live Trading is now active':'Paper Trading is now active');
@@ -1657,6 +1676,7 @@ function setEngineState(state){
     }
   }
 }
+
 
 /* Bot control visibility (spec addendum): Stopped -> [Start, Emergency if positions open];
    Running -> [Stop, Emergency]. Never Start+Stop together. */
@@ -1793,8 +1813,9 @@ function logLine(kind,text,category){
   if(lc)lc.textContent=rows.length;
 }
 
-function addToken(t){
-  tCount++;
+function addToken(t, silent){
+  var el=document.getElementById('tok-count');
+  var tCount=(parseInt(el&&el.textContent)||0)+1;
   set('tok-count',tCount);set('tk-det',tCount);
   var list=document.getElementById('tok-list');
   var emp=list.querySelector('.empty');if(emp)emp.remove();
@@ -1826,7 +1847,7 @@ function addToken(t){
   var rows=list.querySelectorAll('.token-item');
   if(rows.length>25)rows[rows.length-1].remove();
   set('scan-time','last: '+new Date().toLocaleTimeString());
-  logLine('info','Token detected <b>'+mint.slice(0,6)+'…'+mint.slice(-4)+'</b> on '+(isPump?'pump.fun':'Raydium'),'Scanner');
+  if(!silent) logLine('info','Token detected <b>'+mint.slice(0,6)+'…'+mint.slice(-4)+'</b> on '+(isPump?'pump.fun':'Raydium'),'Scanner');
 
   if(t.mintTime){
     detectTimes.push(detectedAt-t.mintTime);
@@ -1851,40 +1872,52 @@ function lookupDuration(mint,time){
   return null;
 }
 
-function addTrade(t){
+function addTrade(t, silent){
   var p=t.pnl_pct!=null?t.pnl_pct:t.pnlPct!=null?t.pnlPct:null;
   var sig=t.tx_sig||t.txSig||null;
   var mint=t.mint||'';
+  // Determine which mode this trade belongs to (use trade data, not current UI state)
+  var tradeMode=t.mode||(isLiveMode?'live':'paper');
 
   if(t.type==='BUY'){
-    logLine('ok','Buy Executed for <b>'+mint.slice(0,6)+'…'+mint.slice(-4)+'</b>','Trades');
-    pushNotif('var(--green)','<b>Buy executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4));
-    showToast('success','Trade Bought',mint.slice(0,6)+'…'+mint.slice(-4));
-    if(isLiveMode && activeAccount) refreshWalletBalance();
+
+    if(!silent){
+      logLine('ok','Buy Executed for <b>'+mint.slice(0,6)+'…'+mint.slice(-4)+'</b>','Trades');
+      pushNotif('var(--green)','<b>Buy executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4));
+      showToast('success','Trade Bought',mint.slice(0,6)+'…'+mint.slice(-4));
+      if(isLiveMode && activeAccount) refreshWalletBalance();
+    }
   }
 
   if(t.type==='SELL'&&p!==null){
-    if(p>=0)wins++;else losses++;
-    pnl+=p;
-    var tot=wins+losses;
-    var wr=tot>0?Math.round(wins/tot*100):0;
-    set('s-wins',wins);set('s-loss',losses);
-    set('s-wr',wins+'W / '+losses+'L');set('tk-wr',wr+'%');
-    var wrEl=document.getElementById('s-wr-val');
-    if(wrEl)wrEl.textContent=wr+'%';
-    var pstr=(pnl>=0?'+':'')+pnl.toFixed(1)+'%';
-    var pe=document.getElementById('s-pnl');
-    pe.textContent=pstr;pe.style.color=pnl>=0?'var(--green)':'var(--danger)';
-    var tp=document.getElementById('tk-pnl');
-    tp.textContent=pstr;tp.className='ticker-val '+(pnl>=0?'up':'dn');
-    feedN++;
-    set('s-tr',feedN);set('feed-count',feedN);
-    var used=wins+losses;
-    set('tk-tr',used);
-    logLine(p>=0?'ok':'warn','Sell Executed '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr,'Trades');
-    pushNotif(p>=0?'var(--green)':'var(--danger)','<b>Sell executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
-    showToast(p>=0?'success':'warning','Trade Sold',mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
-    if(isLiveMode && activeAccount) refreshWalletBalance();
+    // Only update stats for live data, never for historical hydration.
+    if(!silent){
+
+      var stats = (tradeMode==='live') ? modeStats.live : modeStats.paper;
+      if(p>=0)stats.wins++;else stats.losses++;
+      stats.pnl+=p;
+      stats.feedN++;
+      // Only render stats for the currently active mode
+      var ds = currentStats();
+      var tot=ds.wins+ds.losses;
+      var wr=tot>0?Math.round(ds.wins/tot*100):0;
+      set('s-wins',ds.wins);set('s-loss',ds.losses);
+      set('s-wr',ds.wins+'W / '+ds.losses+'L');set('tk-wr',wr+'%');
+      var wrEl=document.getElementById('s-wr-val');
+      if(wrEl)wrEl.textContent=wr+'%';
+      var pstr=(ds.pnl>=0?'+':'')+ds.pnl.toFixed(1)+'%';
+      var pe=document.getElementById('s-pnl');
+      pe.textContent=pstr;pe.style.color=ds.pnl>=0?'var(--green)':'var(--danger)';
+      var tp=document.getElementById('tk-pnl');
+      tp.textContent=pstr;tp.className='ticker-val '+(ds.pnl>=0?'up':'dn');
+      set('s-tr',ds.feedN);set('feed-count',ds.feedN);
+      set('tk-tr',ds.wins+ds.losses);
+
+      logLine(p>=0?'ok':'warn','Sell Executed '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr,'Trades');
+      pushNotif(p>=0?'var(--green)':'var(--danger)','<b>Sell executed</b> — '+mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
+      showToast(p>=0?'success':'warning','Trade Sold',mint.slice(0,6)+'…'+mint.slice(-4)+' → '+pstr);
+      if(isLiveMode && activeAccount) refreshWalletBalance();
+    }
   }
 
   var list=document.getElementById('trade-list');
@@ -1899,11 +1932,13 @@ function addTrade(t){
   var rows=list.querySelectorAll('.trade-item');
   if(rows.length>50)rows[rows.length-1].remove();
 
-  addHistoryRow(t,sig);
+  // Only add to history for live (real-time) events, not historical hydration,
+  // to prevent old trades from polluting current-session trade history display.
+  if(!silent) addHistoryRow(t,sig,tradeMode);
 }
 
 let historyRows=[];
-function addHistoryRow(t,sig){
+function addHistoryRow(t,sig,tradeMode){
   var now=Date.now();
   var row={
     time:now,
@@ -1914,10 +1949,11 @@ function addHistoryRow(t,sig){
     exit:t.exitPrice!=null?Number(t.exitPrice):(t.exit_price!=null?Number(t.exit_price):(t.type==='SELL'&&t.price!=null?Number(t.price):null)),
     profitPct:t.pnl_pct!=null?Number(t.pnl_pct):(t.pnlPct!=null?Number(t.pnlPct):null),
     durationSec:t.type==='SELL'?lookupDuration(t.mint,now):null,
-    mode:t.mode||(isLiveMode?'live':'paper'),
+    mode:tradeMode||t.mode||(isLiveMode?'live':'paper'),
     hash:sig||null,
     status:t.status||(sig?'confirmed':'pending')
   };
+
   historyRows.unshift(row);
   if(historyRows.length>200)historyRows.pop();
   renderHistory();
@@ -2026,6 +2062,64 @@ function applyBuyAmount(d){
   if(d.buyAmountSol!=null)set('ba-sol',Number(d.buyAmountSol).toFixed(6)+' SOL');
 }
 
+function renderPositionList(pos){
+  openPositionsCount=pos.length;
+  set('s-open',pos.length);set('pos-count',pos.length);
+  updateEmergencyVisibility();
+  if(pos.length===0){
+    set('bs-position','None');
+  }else if(pos.length===1){
+    var only=(pos[0].mint||'').slice(0,6)+'…'+(pos[0].mint||'').slice(-4);
+    set('bs-position',only);
+  }else{
+    set('bs-position',pos.length+' active');
+  }
+  var pl=document.getElementById('pos-list');
+  if(pos.length>0){
+    pl.innerHTML=pos.map(function(p){
+      var sec=Math.floor((Date.now()-p.buyTime)/1000);
+      var holdTarget=(parseInt(document.getElementById('c-hold')?document.getElementById('c-hold').value:30000)||30000)/1000;
+      var frac=Math.min(sec/holdTarget,1);
+      var warn=frac>0.8;
+      var color=warn?'var(--danger)':frac>0.5?'var(--warning)':'var(--green)';
+      var r=15,circ=2*Math.PI*r,offset=circ*(1-frac);
+      var mint=p.mint||'';
+      var entry=p.entryPrice!=null?Number(p.entryPrice):(p.entry_price!=null?Number(p.entry_price):null);
+      var curr=p.currentPrice!=null?Number(p.currentPrice):(p.current_price!=null?Number(p.current_price):null);
+      var roi=p.roi!=null?Number(p.roi):(p.roiPct!=null?Number(p.roiPct):(entry&&curr?((curr-entry)/entry*100):null));
+      var pnlVal=p.pnl!=null?Number(p.pnl):(p.pnlUsd!=null?Number(p.pnlUsd):null);
+      var sig=p.txSig||p.tx_sig||null;
+      var roiClass=roi!=null?(roi>=0?'up':'dn'):'';
+      var pnlClass=pnlVal!=null?(pnlVal>=0?'up':'dn'):'';
+      var remainSec=Math.max(Math.round(holdTarget-sec),0);
+      var posMode=p.mode||(isLiveMode?'live':'paper');
+      return '<div class="pos-item">'+
+        '<div class="pos-top">'+
+          '<div class="pos-ring">'+
+            '<svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="'+r+'"></circle>'+
+            '<circle class="fill" cx="19" cy="19" r="'+r+'" stroke="'+color+'" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'"></circle></svg>'+
+            '<div class="label" style="color:'+color+'">'+sec+'s</div>'+
+          '</div>'+
+          '<div class="pos-info">'+
+          '<div class="pos-addr">'+mint.slice(0,10)+'...'+mint.slice(-6)+' <span class="pos-mode-badge '+posMode+'">'+posMode+'</span></div>'+
+          '<div class="pos-sub"><span class="dotmini" style="width:5px;height:5px;border-radius:50%;background:'+color+';display:inline-block"></span>holding · sells in '+remainSec+'s</div>'+
+          '</div>'+
+          '<div class="pos-timer" style="color:'+color+'">'+sec+'s</div>'+
+        '</div>'+
+        '<div class="pos-stats">'+
+          '<div class="pos-stat"><span class="pos-stat-lbl">Entry</span><span class="pos-stat-val">'+(entry!=null?'$'+entry.toPrecision(3):'—')+'</span></div>'+
+          '<div class="pos-stat"><span class="pos-stat-lbl">Current</span><span class="pos-stat-val">'+(curr!=null?'$'+curr.toPrecision(3):'—')+'</span></div>'+
+          '<div class="pos-stat"><span class="pos-stat-lbl">ROI</span><span class="pos-stat-val '+roiClass+'">'+(roi!=null?((roi>=0?'+':'')+roi.toFixed(1)+'%'):'—')+'</span></div>'+
+          '<div class="pos-stat"><span class="pos-stat-lbl">PnL</span><span class="pos-stat-val '+pnlClass+'">'+(pnlVal!=null?((pnlVal>=0?'+$':'-$')+Math.abs(pnlVal).toFixed(2)):'—')+'</span></div>'+
+          '<div class="pos-stat"><span class="pos-stat-lbl">Explorer</span><span class="pos-stat-val">'+(sig?'<a class="tx-link" href="https://solscan.io/tx/'+sig+'" target="_blank">'+sig.slice(0,4)+'…↗</a>':'—')+'</span></div>'+
+        '</div>'+
+        '</div>';
+    }).join('');
+  }else{
+    pl.innerHTML='<div class="empty"><span class="empty-icon">💼</span>No open positions</div>';
+  }
+}
+
 function fetchStats(){
   fetch(B+'/api/stats').then(function(r){return r.json();}).then(function(s){
     if(!s)return;
@@ -2033,65 +2127,26 @@ function fetchStats(){
       var v=s.solBalance.toFixed(4)+' SOL';
       set('s-bal',v);set('tk-bal',v);set('ws-bal',v);
     }
-    var pos=s.openPositions||[];
-    openPositionsCount=pos.length;
-    set('s-open',pos.length);set('pos-count',pos.length);
-    updateEmergencyVisibility();
-    if(pos.length===0){
-      set('bs-position','None');
-    }else if(pos.length===1){
-      var only=(pos[0].mint||'').slice(0,6)+'…'+(pos[0].mint||'').slice(-4);
-      set('bs-position',only);
-    }else{
-      set('bs-position',pos.length+' active');
-    }
-    var pl=document.getElementById('pos-list');
-    if(pos.length>0){
-      pl.innerHTML=pos.map(function(p){
-        var sec=Math.floor((Date.now()-p.buyTime)/1000);
-        var holdTarget=(parseInt(document.getElementById('c-hold')?document.getElementById('c-hold').value:30000)||30000)/1000;
-        var frac=Math.min(sec/holdTarget,1);
-        var warn=frac>0.8;
-        var color=warn?'var(--danger)':frac>0.5?'var(--warning)':'var(--green)';
-        var r=15,circ=2*Math.PI*r,offset=circ*(1-frac);
-        var mint=p.mint||'';
-        var entry=p.entryPrice!=null?Number(p.entryPrice):(p.entry_price!=null?Number(p.entry_price):null);
-        var curr=p.currentPrice!=null?Number(p.currentPrice):(p.current_price!=null?Number(p.current_price):null);
-        var roi=p.roi!=null?Number(p.roi):(p.roiPct!=null?Number(p.roiPct):(entry&&curr?((curr-entry)/entry*100):null));
-        var pnlVal=p.pnl!=null?Number(p.pnl):(p.pnlUsd!=null?Number(p.pnlUsd):null);
-        var sig=p.txSig||p.tx_sig||null;
-        var roiClass=roi!=null?(roi>=0?'up':'dn'):'';
-        var pnlClass=pnlVal!=null?(pnlVal>=0?'up':'dn'):'';
-        var remainSec=Math.max(Math.round(holdTarget-sec),0);
-        var posMode=p.mode||(isLiveMode?'live':'paper');
-        return '<div class="pos-item">'+
-          '<div class="pos-top">'+
-            '<div class="pos-ring">'+
-              '<svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="'+r+'"></circle>'+
-              '<circle class="fill" cx="19" cy="19" r="'+r+'" stroke="'+color+'" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'"></circle></svg>'+
-              '<div class="label" style="color:'+color+'">'+sec+'s</div>'+
-            '</div>'+
-            '<div class="pos-info">'+
-            '<div class="pos-addr">'+mint.slice(0,10)+'...'+mint.slice(-6)+' <span class="pos-mode-badge '+posMode+'">'+posMode+'</span></div>'+
-            '<div class="pos-sub"><span class="dotmini" style="width:5px;height:5px;border-radius:50%;background:'+color+';display:inline-block"></span>holding · sells in '+remainSec+'s</div>'+
-            '</div>'+
-            '<div class="pos-timer" style="color:'+color+'">'+sec+'s</div>'+
-          '</div>'+
-          '<div class="pos-stats">'+
-            '<div class="pos-stat"><span class="pos-stat-lbl">Entry</span><span class="pos-stat-val">'+(entry!=null?'$'+entry.toPrecision(3):'—')+'</span></div>'+
-            '<div class="pos-stat"><span class="pos-stat-lbl">Current</span><span class="pos-stat-val">'+(curr!=null?'$'+curr.toPrecision(3):'—')+'</span></div>'+
-            '<div class="pos-stat"><span class="pos-stat-lbl">ROI</span><span class="pos-stat-val '+roiClass+'">'+(roi!=null?((roi>=0?'+':'')+roi.toFixed(1)+'%'):'—')+'</span></div>'+
-            '<div class="pos-stat"><span class="pos-stat-lbl">PnL</span><span class="pos-stat-val '+pnlClass+'">'+(pnlVal!=null?((pnlVal>=0?'+$':'-$')+Math.abs(pnlVal).toFixed(2)):'—')+'</span></div>'+
-            '<div class="pos-stat"><span class="pos-stat-lbl">Explorer</span><span class="pos-stat-val">'+(sig?'<a class="tx-link" href="https://solscan.io/tx/'+sig+'" target="_blank">'+sig.slice(0,4)+'…↗</a>':'—')+'</span></div>'+
-          '</div>'+
-          '</div>';
-      }).join('');
-    }else{
-      pl.innerHTML='<div class="empty"><span class="empty-icon">💼</span>No open positions</div>';
+    // Paper mode's position list correctly comes from /api/stats (paper-only
+    // data by design). Live mode fetches its own positions separately below —
+    // /api/stats always reflects the PAPER wallet regardless of trading mode,
+    // which was the actual root cause of "Real Positions" not appearing
+    // correctly while Live Trading was active.
+    if(!isLiveMode){
+      renderPositionList(s.openPositions||[]);
     }
   }).catch(function(){
     logLine('warn','Could not reach /api/stats','RPC');
   });
+
+  if(isLiveMode){
+    // /api/portfolio is backed by positionManager, which tracks open positions
+    // from BOTH paper and live trades uniformly — the correct universal source
+    // for "what's actually open right now," unlike /api/stats.
+    fetch(B+'/api/portfolio').then(function(r){return r.json();}).then(function(pf){
+      renderPositionList((pf&&pf.openPositions)||[]);
+    }).catch(function(){});
+  }
 
   var t0=performance.now();
   fetch(B+'/health').then(function(r){return r.json();}).then(function(h){
@@ -2130,8 +2185,11 @@ function fetchBotStatus(){
     if(d.buyAmountUsd!=null||d.buyAmountSol!=null){
       applyBuyAmount({buyAmountUsd:d.buyAmountUsd,buyAmountSol:d.buyAmountSol});
     }
-    if(d.status)setEngineState(d.status);
-    else updateBtn(d.active!==false);
+    // Backend always returns { active, state, ... } — never 'status'. Read the
+    // real fields explicitly instead of relying on a fallback that happened to
+    // work by coincidence (checking a field name that never existed).
+    if(d.state)setEngineState(d.state);
+    else if(typeof d.active==='boolean')updateBtn(d.active);
   }).catch(function(){});
 }
 
@@ -2178,12 +2236,7 @@ function loadSettings(){
 
 function saveLocalOnlySettings(){
   var data={
-    buyCount:document.getElementById('c-buycount').value,
-    jitoTip:document.getElementById('c-jito').value,
-    stopLoss:document.getElementById('c-sl').value,
-    rpcEndpoint:document.getElementById('c-rpc').value,
-    wsEndpoint:document.getElementById('c-ws').value,
-    simulationMode:document.getElementById('opt-sim').checked
+    rpcEndpoint:document.getElementById('c-rpc').value
   };
   try{localStorage.setItem('memerush-local-settings',JSON.stringify(data));}catch(e){}
 }
@@ -2192,14 +2245,10 @@ function restoreLocalOnlySettings(){
     var raw=localStorage.getItem('memerush-local-settings');
     if(!raw)return;
     var data=JSON.parse(raw);
-    if(data.buyCount!=null)document.getElementById('c-buycount').value=data.buyCount;
-    if(data.jitoTip!=null)document.getElementById('c-jito').value=data.jitoTip;
-    if(data.stopLoss!=null)document.getElementById('c-sl').value=data.stopLoss;
     if(data.rpcEndpoint!=null)document.getElementById('c-rpc').value=data.rpcEndpoint;
-    if(data.wsEndpoint!=null)document.getElementById('c-ws').value=data.wsEndpoint;
-    if(data.simulationMode!=null)document.getElementById('opt-sim').checked=data.simulationMode;
   }catch(e){}
 }
+
 
 function onBuyModeChange(){
   var mode = document.getElementById('c-buymode').value;
@@ -2210,10 +2259,10 @@ function onBuyModeChange(){
 }
 
 fetch(B+'/api/trades').then(function(r){return r.json();}).then(function(d){
-  if(Array.isArray(d))d.forEach(addTrade);
+  if(Array.isArray(d))d.forEach(function(t){ addTrade(t, true); }); // silent: historical hydration, not new events
 }).catch(function(){});
 fetch(B+'/api/tokens').then(function(r){return r.json();}).then(function(d){
-  if(Array.isArray(d))d.slice(0,15).forEach(addToken);
+  if(Array.isArray(d))d.slice(0,15).forEach(function(t){ addToken(t, true); }); // silent: historical hydration
 }).catch(function(){});
 setEngineState('stopped');
 setMode(true,true);
@@ -2258,8 +2307,24 @@ function setMode(isPaper,skipPost){
   var wsBalLabel=document.getElementById('ws-bal-label');
   if(wsTitle)wsTitle.textContent=isPaper?'Paper Wallet':'Bot Wallet (Live)';
   if(wsBalLabel)wsBalLabel.textContent=isPaper?'Paper balance':'SOL balance';
+  var wsBalRow=document.getElementById('ws-balance-row');
+  if(wsBalRow)wsBalRow.style.display=isPaper?'':'none';
   updateLiveWarningBanner();
   checkLiveStartEligibility();
+
+  // Refresh stats display for the new mode so counters immediately reflect
+  // this mode's own history, not the previous mode's.
+  var ds=currentStats();
+  var tot=ds.wins+ds.losses;
+  var wr=tot>0?Math.round(ds.wins/tot*100):0;
+  set('s-wins',ds.wins);set('s-loss',ds.losses);
+  set('s-wr',ds.wins+'W / '+ds.losses+'L');set('tk-wr',wr+'%');
+  var wrEl=document.getElementById('s-wr-val');if(wrEl)wrEl.textContent=(tot>0?wr+'%':'—');
+  var pstr=(ds.pnl>=0?'+':'')+ds.pnl.toFixed(1)+'%';
+  var pe=document.getElementById('s-pnl');
+  if(pe){pe.textContent=pstr;pe.style.color=ds.pnl>=0?'var(--green)':'var(--danger)';}
+  set('s-tr',ds.feedN);set('feed-count',ds.feedN);set('tk-tr',ds.wins+ds.losses);
+
   /* Immediately refresh whichever balance source is now authoritative for this
      mode — never leave the previous mode's stale value showing. */
   if(isPaper){
@@ -2269,16 +2334,21 @@ function setMode(isPaper,skipPost){
     if(activeAccount) refreshWalletBalance(); else updatePrimaryBalanceDisplay(false);
   }
   if(!skipPost){
-    if(!requireWalletOrPrompt('change trading mode')){ return; }
-    authFetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({paperTrading:isPaper})})
-      .then(function(r){return r.json();})
+    // Mode switch does NOT require wallet auth — it is a UI preference.
+    // The backend setting (paperTrading) is updated if a token is available,
+    // but failure doesn't block the UI change.
+    var settingsBody=JSON.stringify({paperTrading:isPaper});
+    var req=authToken
+      ? authFetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:settingsBody})
+      : fetch(B+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:settingsBody});
+    req.then(function(r){return r.json();})
       .then(function(){ checkLiveStartEligibility(); })
-      .catch(function(){ logLine('err','Failed to switch trading mode','Errors'); showToast('error','Failed to Switch Mode',''); });
+      .catch(function(){ /* mode switch still applied in UI, backend update failed silently */ });
     logLine('info','Switched to '+(isPaper?'🟣 Paper':'🟢 Live')+' Trading','Wallet');
     showToast('info','Trading Mode Changed',isPaper?'🟣 Paper Trading':'🟢 Live Trading');
   }
 }
+
 
 function saveConfig(){
   if(!requireWalletOrPrompt('save settings'))return;
@@ -2293,9 +2363,6 @@ function saveConfig(){
     PRIORITY_FEE_LAMPORTS:Math.round((parseFloat(document.getElementById('c-priofee').value)||0)*1e9),
     MIN_LIQUIDITY_SOL:document.getElementById('c-liq').value,
     HOLD_TIME_MS:document.getElementById('c-hold').value,
-    HOLD_TIME_MOMENTUM_MS:document.getElementById('c-mom').value,
-    TAKE_PROFIT_MIN:document.getElementById('c-tpmin').value,
-    TAKE_PROFIT_MAX:document.getElementById('c-tpmax').value,
     autoResumeNextDay:document.getElementById('opt-autoresume').checked
   };
   saveLocalOnlySettings();
@@ -2364,7 +2431,6 @@ function exportLogs(){
 function resetSettings(){
   if(!confirm('Reset all settings to defaults?'))return;
   document.getElementById('c-skip').value='3';
-  document.getElementById('c-buycount').value='1';
   document.getElementById('c-buymode').value='USD';
   document.getElementById('c-buyusd').value='1';
   document.getElementById('c-buy').value='0.01';
@@ -2372,19 +2438,14 @@ function resetSettings(){
   document.getElementById('c-liq').value='0.001';
   document.getElementById('c-hold').value='30000';
   document.getElementById('c-hold-sec').value='30';
-  document.getElementById('c-mom').value='45000';
-  document.getElementById('c-tpmin').value='10';
-  document.getElementById('c-tpmax').value='100';
   document.getElementById('c-priofee').value='0.0005';
-  document.getElementById('c-jito').value='0.0002';
-  document.getElementById('c-sl').value='15';
   document.getElementById('c-rpc').value='https://api.mainnet-beta.solana.com';
-  document.getElementById('c-ws').value='wss://memebot-4.onrender.com';
   document.getElementById('opt-autoresume').checked=true;
   onBuyModeChange();
   applySkipStrategy({skipCount:3,currentCounter:0});
   logLine('warn','Settings reset to defaults (not yet saved — click Save Configuration to apply)');
 }
+
 
 function checkLiveStartEligibility(){
   var startBtn=document.getElementById('start-btn');
