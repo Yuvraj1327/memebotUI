@@ -1155,9 +1155,8 @@ select.cfg-in{color:var(--text);cursor:pointer}
    unmodified.
    ============================================================ */
 const B='https://memebot-asp9.onrender.com';
-let tCount=0,wins=0,losses=0,pnl=0,feedN=0,tradeMax=100,botActive=true;
+let tCount=0,wins=0,losses=0,pnl=0,feedN=0;
 let buyTimes=[],sellTimes=[],detectTimes=[];
-let dailyLimitReached=false;
 let walletSolBalance=null;
 let isLiveMode=false;
 let openPositionsCount=0;
@@ -1188,6 +1187,7 @@ function removeToast(el){
    WALLET STANDARD — browser wallet connect (AUTHENTICATION ONLY)
    ============================================================ */
 const detectedWallets = new Map();
+const subscribedWalletEvents = new Set(); // prevents stacking duplicate 'change' listeners on reconnect
 let activeWallet = null;
 let activeAccount = null;
 let authToken = null;
@@ -1331,8 +1331,10 @@ async function authenticateWallet(wallet, account, silent){
 }
 
 function subscribeWalletEvents(wallet){
+  if (subscribedWalletEvents.has(wallet.name)) return; // already subscribed — avoid stacking duplicate listeners
   var events = wallet.features && wallet.features['standard:events'];
   if (!events || !events.on) return;
+  subscribedWalletEvents.add(wallet.name);
   events.on('change', function(props){
     if (props.accounts){
       if (!props.accounts.length){
@@ -1685,27 +1687,46 @@ function setBotStatusBadge(state){
 }
 
 let engineState='stopped';
+let engineStateWatchdog=null; // 5s recovery timer for transient states — see setEngineState()
+
 function setEngineState(state){
   var prevState = engineState;
   engineState=state;
 
   setBotStatusBadge(state);
-  set('tk-status',state==='limit_reached'?'DAILY LIMIT REACHED':state.toUpperCase());
+  set('tk-status',state.toUpperCase());
 
   updateControlVisibility(state);
 
+  // Transient states (starting/stopping/emergency_stop) must never last more
+  // than 5s. If the backend hasn't confirmed a real (running/stopped) state
+  // by then, force a re-sync instead of leaving the UI stuck — this is the
+  // actual fix for "permanently stuck in Starting/Stopping."
+  if(engineStateWatchdog){ clearTimeout(engineStateWatchdog); engineStateWatchdog=null; }
+  if(state==='starting'||state==='stopping'||state==='emergency_stop'){
+    engineStateWatchdog=setTimeout(function(){
+      logLine('warn','No confirmation from backend after 5s — re-syncing bot state','Errors');
+      fetchBotStatus();
+    },5000);
+  }
+
   if (prevState !== state){
     if(state==='running') showToast('success','Bot Started',isLiveMode?'Live Trading is now active':'Paper Trading is now active');
-    else if(state==='stopped'&&(prevState==='stopping'||prevState==='running')) showToast('info','Bot Stopped','No new trades will be opened');
-    if (state==='running'||state==='paused'||state==='stopped'||state==='limit_reached'){
-      var notifColor = state==='running' ? 'var(--green)' : state==='limit_reached' ? 'var(--danger)' : 'var(--warning)';
-      pushNotif(notifColor, '<b>Bot '+state.replace('_',' ')+'</b>');
+    else if(state==='stopped'&&(prevState==='stopping'||prevState==='running'||prevState==='emergency_stop')) showToast('info','Bot Stopped','No new trades will be opened');
+    if (state==='running'||state==='stopped'){
+      pushNotif(state==='running'?'var(--green)':'var(--warning)', '<b>Bot '+state+'</b>');
     }
   }
 }
 
-/* Bot control visibility (spec addendum): Stopped -> [Start, Emergency if positions open];
-   Running -> [Stop, Emergency]. Never Start+Stop together. */
+/* Bot control visibility — single, simple rule (backend is the only source of
+   truth for engineState; this function never guesses):
+     stopped  -> Start Bot only
+     running  -> Stop Bot only
+     starting -> Start Bot shown, disabled (never hides both buttons)
+     stopping / emergency_stop -> Stop Bot shown, disabled
+   Emergency Sell is additionally visible whenever positions are still open,
+   even while stopped, so they can always be closed manually. */
 function updateControlVisibility(state){
   var startBtn=document.getElementById('start-btn');
   var stopBtn=document.getElementById('stop-btn');
@@ -1713,24 +1734,38 @@ function updateControlVisibility(state){
   function show(el,visible){if(el)el.style.display=visible?'':'none';}
   function enable(el,val){if(el)el.disabled=!val;}
 
-  var transient=(state==='starting'||state==='stopping');
-  [startBtn,stopBtn,emergencyBtn].forEach(function(b){enable(b,!transient);});
+  switch(state){
+    case 'running':
+      show(startBtn,false); show(stopBtn,true); enable(stopBtn,true);
+      break;
+    case 'starting':
+      show(startBtn,true); enable(startBtn,false); show(stopBtn,false);
+      break;
+    case 'stopping':
+    case 'emergency_stop':
+      show(startBtn,false); show(stopBtn,true); enable(stopBtn,false);
+      break;
+    case 'stopped':
+    default:
+      show(startBtn,true); enable(startBtn,true); show(stopBtn,false);
+  }
 
-  var running = (state==='running'||state==='limit_reached');
-  show(startBtn, !running);
-  show(stopBtn, running);
-  /* Emergency Sell: visible whenever running OR whenever open positions still exist, even if stopped */
-  show(emergencyBtn, running || openPositionsCount>0);
-
-  if(state==='starting'){show(startBtn,true);show(stopBtn,false);enable(emergencyBtn,false);}
-  if(state==='stopping'){show(startBtn,false);show(stopBtn,true);}
+  var transient = (state==='starting'||state==='stopping'||state==='emergency_stop');
+  show(emergencyBtn, state==='running' || transient || openPositionsCount>0);
+  enable(emergencyBtn, !transient);
 
   checkLiveStartEligibility();
 }
 
 function updateEmergencyVisibility(){
-  /* Re-applies the emergency-button visibility rule after openPositionsCount changes,
-     without needing a full engine-state transition. */
+  /* Re-applies visibility after openPositionsCount changes (e.g. a fresh
+     /api/stats or /api/portfolio poll), without needing a full state
+     transition. Also the one place that auto-finalizes 'stopping' -> 'stopped'
+     if positions have already reached 0 by the time this runs. */
+  if(engineState==='stopping' && openPositionsCount===0){
+    setEngineState('stopped');
+    return;
+  }
   updateControlVisibility(engineState);
 }
 
@@ -1749,7 +1784,6 @@ function startBot(){
     }
     if(!authToken){ openWalletModal(); return; }
   }
-  var prev=engineState;
   setEngineState('starting');
   showToast('info','Starting Bot...','');
   var req=authToken?authFetch(B+'/bot/start',{method:'POST'}):fetch(B+'/bot/start',{method:'POST'});
@@ -1757,24 +1791,22 @@ function startBot(){
     return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok, data:d}; });
   }).then(function(res){
     if(!res.ok){
-      setEngineState(prev);
       var msg=res.data&&res.data.error?res.data.error:'Failed to start bot';
       logLine('err',msg,'Errors');
       showToast('error','Failed to Start Bot',msg);
-      return;
+    } else {
+      logLine('ok',isLiveMode?'🟢 Live Trading started — real SOL transactions active':'🟣 Paper Trading started — virtual funds only','Trades');
     }
-    setEngineState((res.data&&res.data.state)||'running');
-    logLine('ok',isLiveMode?'🟢 Live Trading started — real SOL transactions active':'🟣 Paper Trading started — virtual funds only','Trades');
+    fetchBotStatus(); // backend is the single source of truth — always resync after the request settles
   }).catch(function(){
-    setEngineState(prev);
     logLine('err','Failed to start bot — could not reach backend','Errors');
     showToast('error','Failed to Start Bot','Could not reach backend');
+    fetchBotStatus();
   });
 }
 function stopBot(){
   if(isLiveMode&&!requireWalletOrPrompt('stop the bot'))return;
   var hadOpenPositions=openPositionsCount>0;
-  var prev=engineState;
   setEngineState('stopping');
   showToast('info','Stopping Bot...','');
   var req=authToken?authFetch(B+'/bot/stop',{method:'POST'}):fetch(B+'/bot/stop',{method:'POST'});
@@ -1782,22 +1814,21 @@ function stopBot(){
     return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok, data:d}; });
   }).then(function(res){
     if(!res.ok){
-      setEngineState(prev);
       var msg=res.data&&res.data.error?res.data.error:'Failed to stop bot';
       logLine('err',msg,'Errors');
       showToast('error','Failed to Stop Bot',msg);
-      return;
+    } else {
+      logLine('warn','Bot stopped — scanning, buying and automatic selling all halted','Trades');
+      if(hadOpenPositions){
+        logLine('warn',openPositionsCount+' open position(s) are now unmonitored — they will NOT auto-sell until Start Bot is pressed again. Use Emergency Sell to close them now if needed.','Trades');
+        showToast('warning','Bot Stopped — Positions Frozen',openPositionsCount+' open position(s) will not auto-sell until you press Start Bot again');
+      }
     }
-    setEngineState((res.data&&res.data.state)||'stopped');
-    logLine('warn','Bot stopped — scanning, buying and automatic selling all halted','Trades');
-    if(hadOpenPositions){
-      logLine('warn',openPositionsCount+' open position(s) are now unmonitored — they will NOT auto-sell until Start Bot is pressed again. Use Emergency Sell to close them now if needed.','Trades');
-      showToast('warning','Bot Stopped — Positions Frozen',openPositionsCount+' open position(s) will not auto-sell until you press Start Bot again');
-    }
+    fetchBotStatus(); // backend is the single source of truth — always resync after the request settles
   }).catch(function(){
-    setEngineState(prev);
     logLine('err','Failed to stop bot — could not reach backend','Errors');
     showToast('error','Failed to Stop Bot','Could not reach backend');
+    fetchBotStatus();
   });
 }
 
@@ -1812,8 +1843,7 @@ function closeEmergencyConfirm(){
 function confirmEmergencySell(){
   var btn=document.getElementById('confirm-emergency-btn');
   btn.disabled=true; btn.textContent='Selling...';
-  var prev=engineState;
-  setEngineState('stopping');
+  setEngineState('emergency_stop');
   var req=authToken?authFetch(B+'/bot/emergency-sell',{method:'POST'}):fetch(B+'/bot/emergency-sell',{method:'POST'});
   req.then(function(r){
     return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok, data:d}; });
@@ -1821,23 +1851,22 @@ function confirmEmergencySell(){
     closeEmergencyConfirm();
     btn.disabled=false; btn.textContent='Confirm Emergency Sell';
     if(!res.ok){
-      setEngineState(prev);
       var msg=res.data&&res.data.error?res.data.error:'Emergency Sell request failed';
       logLine('err',msg,'Errors');
       showToast('error','Emergency Sell Failed',msg);
-      return;
+    } else {
+      logLine('err','Emergency Sell triggered — all open positions liquidated, bot stopped','Trades');
+      pushNotif('var(--danger)','<b>Emergency Sell triggered</b> — all positions liquidated');
+      showToast('success','Emergency Sell Completed','All positions have been closed.');
     }
-    setEngineState((res.data&&res.data.state)||'stopped');
-    logLine('err','Emergency Sell triggered — all open positions liquidated, bot stopped','Trades');
-    pushNotif('var(--danger)','<b>Emergency Sell triggered</b> — all positions liquidated');
-    showToast('success','Emergency Sell Completed','All positions have been closed.');
     fetchStats();
+    fetchBotStatus(); // backend is the single source of truth — always resync after the request settles
   }).catch(function(){
-    setEngineState(prev);
     closeEmergencyConfirm();
     btn.disabled=false; btn.textContent='Confirm Emergency Sell';
     logLine('err','Emergency Sell request failed — could not reach backend','Errors');
     showToast('error','Emergency Sell Failed','Could not reach backend');
+    fetchBotStatus();
   });
 }
 /* legacy name kept in case anything still calls it directly */
@@ -2214,6 +2243,7 @@ function fetchStats(){
     // from BOTH paper and live trades uniformly — the correct universal source
     // for "what's actually open right now," unlike /api/stats.
     fetch(B+'/api/portfolio?mode=live').then(function(r){return r.json();}).then(function(pf){
+      if(!isLiveMode)return; // mode may have switched to Paper while this was in flight — discard stale response
       renderPositionList((pf&&pf.openPositions)||[]);
     }).catch(function(){});
   }
@@ -2346,7 +2376,6 @@ setInterval(refreshSolUsdPrice,30000);
 setInterval(function(){ if(activeAccount) refreshWalletBalance(); },15000);
 
 function updateBtn(active){
-  botActive=active;
   setEngineState(active?'running':'stopped');
 }
 
@@ -2493,6 +2522,12 @@ function checkLiveStartEligibility(){
   var notice=document.getElementById('wallet-req-notice');
   var readyChip=document.getElementById('ready-chip');
   if(!startBtn)return;
+  // Never override the button's disabled state while a transient operation is
+  // in progress — updateControlVisibility() already set the correct enabled/
+  // disabled state for 'starting'/'stopping'/'emergency_stop'. Without this
+  // guard, an eligible wallet+balance check would immediately re-enable a
+  // button that was just correctly disabled, allowing a duplicate click.
+  if(engineState==='starting'||engineState==='stopping'||engineState==='emergency_stop')return;
   if(!isLiveMode||startBtn.style.display==='none'){
     if(notice)notice.classList.remove('show');
     if(readyChip)readyChip.classList.remove('show');
