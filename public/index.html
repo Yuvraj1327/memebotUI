@@ -1487,13 +1487,22 @@ async function fetchWalletSolBalance(address){
   } catch(e){ /* fall through to direct RPC below */ }
 
   // Fallback only: direct RPC call, in case the backend itself is unreachable.
+  // IMPORTANT: only trust a non-zero result from this unreliable path. When
+  // the public RPC is rate-limited or the backend is waking from a cold start,
+  // it can return value:0 for a funded wallet. Returning null here means "we
+  // don't know" — which is correct — and prevents a false "Insufficient SOL
+  // Balance" from blocking Live Trading for a wallet that actually has funds.
+  // The backend (/api/wallet/lookup/) is the only trusted source for a genuine
+  // zero-balance reading.
   try {
     var rpcInput = document.getElementById('c-rpc');
     var rpcUrl = (rpcInput && rpcInput.value) || 'https://api.mainnet-beta.solana.com';
     var res = await fetch(rpcUrl, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[address]})});
     var data = await res.json();
-    var lamports = data && data.result && data.result.value != null ? data.result.value : null;
-    return lamports != null ? (lamports/1e9) : null;
+    var lamports = (data && data.result && typeof data.result.value === 'number') ? data.result.value : null;
+    // Return null (unknown) for a zero result from this unreliable fallback —
+    // only a positive lamport count is trustworthy without the backend.
+    return (lamports != null && lamports > 0) ? (lamports/1e9) : null;
   } catch(e){
     return null;
   }
